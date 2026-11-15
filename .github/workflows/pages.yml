@@ -44,8 +44,8 @@ jobs:
       - name: Build static site (Python engine runs in the browser via Pyodide)
         working-directory: frontend
         env:
-          # Served from the custom domain root (frontend/public/CNAME), so assets resolve from /
-          VITE_BASE: /
+          # github.io/<repo>/ until the custom domain is live; then set repo variable PAGES_BASE=/
+          VITE_BASE: ${{ vars.PAGES_BASE || format('/{0}/', github.event.repository.name) }}
         run: |
           npm ci
           npm run build:static
