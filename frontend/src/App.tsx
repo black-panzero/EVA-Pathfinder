@@ -1,33 +1,52 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, BookOpen, Check, Download, GitCompareArrows, HelpCircle, ShieldCheck, SlidersHorizontal, TriangleAlert } from "lucide-react";
 import { api, ApiRequestError, STATIC_MODE } from "./api/client";
 import type { DatasetsResponse, EvaluateResponse, MissionRequest, Observations, ReplanRequest, ReplanResponse, ScienceSite, StudyArea, XY } from "./api/types";
-import { ContingencyLab, type ContingencyState } from "./components/ContingencyLab";
-import { EvidencePanel } from "./components/EvidencePanel";
-import { GuardianPanel } from "./components/GuardianPanel";
-import { LayerPanel, MissionInputs } from "./components/MissionInputs";
-import { RouteComparison } from "./components/RouteComparison";
-import { Badge, StatusPill } from "./components/common";
-import { fmt } from "./features/format";
-import { MarsMap, type LayerId, type MapRoute, type PickMode } from "./map/MarsMap";
+import { Guide } from "./components/Guide";
+import { StatusBadge } from "./components/ui";
+import { fmt, fmtMin } from "./features/format";
+import { ContingencyStep, type ContingencyState } from "./features/steps/ContingencyStep";
+import { EvidenceStep } from "./features/steps/EvidenceStep";
+import { FeasibilityStep } from "./features/steps/FeasibilityStep";
+import { PlanStep } from "./features/steps/PlanStep";
+import { type Plans, routeTotals, RoutesStep } from "./features/steps/RoutesStep";
+import { MarsMap, type MapRoute, type MapView, type PickMode } from "./map/MarsMap";
 
-type Plans = { shortest: EvaluateResponse | null; terrain: EvaluateResponse | null };
-const DEFAULT_LAYERS: Record<LayerId, { visible: boolean; opacity: number }> = {
-  ortho: { visible: true, opacity: 1 }, hillshade: { visible: false, opacity: 0.5 }, elevation: { visible: false, opacity: 0.6 },
-  slope: { visible: false, opacity: 0.55 }, geology: { visible: false, opacity: 0.4 },
-};
-const errText = (e: unknown) => (e instanceof ApiRequestError ? `${e.code}: ${e.message}` : String(e));
-const legsPolyline = (p: EvaluateResponse | null) => (p ? p.assessment.legs.flatMap((l) => l.route?.polyline_xy_m ?? []) : []);
+type StepId = 1 | 2 | 3 | 4 | 5;
+const STEPS: { id: StepId; title: string; icon: typeof Check }[] = [
+  { id: 1, title: "Plan", icon: SlidersHorizontal },
+  { id: 2, title: "Routes", icon: GitCompareArrows },
+  { id: 3, title: "Feasibility", icon: ShieldCheck },
+  { id: 4, title: "Contingency", icon: TriangleAlert },
+  { id: 5, title: "Evidence", icon: BookOpen },
+];
+const GUIDE_KEY = "eva-pathfinder-guide-v1";
+const errText = (e: unknown) => (e instanceof ApiRequestError ? `${e.message} (${e.code})` : String(e));
+const poly = (p: EvaluateResponse | null) => (p ? p.assessment.legs.flatMap((l) => l.route?.polyline_xy_m ?? []) : []);
+const seenGuide = () => { try { return localStorage.getItem(GUIDE_KEY) === "1"; } catch { return false; } };
+
+function Mark() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" className="mark">
+      <circle cx="5" cy="17" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7.5 16 C 11 14, 11 8, 15 7.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="2.2 2.2" />
+      <circle cx="18" cy="7" r="2.5" fill="#ff7a45" />
+    </svg>
+  );
+}
 
 export default function App() {
   const [sa, setSa] = useState<StudyArea | null>(null);
   const [obs, setObs] = useState<Observations | null>(null);
   const [ds, setDs] = useState<DatasetsResponse | null>(null);
   const [req, setReq] = useState<MissionRequest | null>(null);
-  const [consumableLabel, setConsumableLabel] = useState("Illustrative consumable (generic units)");
+  const [sites, setSites] = useState<ScienceSite[]>([]);
   const [plans, setPlans] = useState<Plans>({ shortest: null, terrain: null });
+  const [planKey, setPlanKey] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [layers, setLayers] = useState(DEFAULT_LAYERS);
+  const [step, setStep] = useState<StepId>(1);
+  const [view, setView] = useState<MapView>("ortho");
   const [showTraverse, setShowTraverse] = useState(false);
   const [showPhotos, setShowPhotos] = useState(true);
   const [pick, setPick] = useState<PickMode>("none");
@@ -37,23 +56,28 @@ export default function App() {
   const [replanBusy, setReplanBusy] = useState(false);
   const [replanErr, setReplanErr] = useState<string | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
+  const [guide, setGuide] = useState(!seenGuide());
+  const [focus, setFocus] = useState<{ x: number; y: number; n: number } | null>(null);
+
+  // inputs that change routes (route_choice only selects between the two computed plans)
+  const inputKey = req ? JSON.stringify({ ...req, route_choice: undefined }) : "";
+  const stale = !!planKey && planKey !== inputKey;
 
   const evaluate = useCallback(async (r: MissionRequest) => {
     setBusy(true); setError(null); setReplan(null); setReplanReq(null);
     try {
       const [shortest, terrain] = await Promise.all([api.evaluate({ ...r, route_choice: "shortest" }), api.evaluate({ ...r, route_choice: "terrain" })]);
       setPlans({ shortest, terrain });
-      const chosen = r.route_choice === "shortest" ? shortest : terrain;
-      // default progress: 30% into the return leg (from backend leg/activity times)
-      const a = chosen.assessment;
-      const legs = a.legs;
-      if (legs.every((l) => l.minutes !== null)) {
-        const beforeReturn = legs.slice(0, -1).reduce((s, l) => s + (l.minutes ?? 0), 0) + a.activities.reduce((s, x) => s + x.minutes, 0);
-        setCont((c) => ({ ...c, elapsed_min: Math.round(beforeReturn + 0.3 * (legs[legs.length - 1].minutes ?? 0)) }));
+      setPlanKey(JSON.stringify({ ...r, route_choice: undefined }));
+      const a = (r.route_choice === "shortest" ? shortest : terrain).assessment;
+      if (a.legs.every((l) => l.minutes !== null)) {
+        const beforeReturn = a.legs.slice(0, -1).reduce((s, l) => s + (l.minutes ?? 0), 0) + a.activities.reduce((s, x) => s + x.minutes, 0);
+        setCont((c) => ({ ...c, elapsed_min: Math.round(beforeReturn + 0.3 * (a.legs[a.legs.length - 1].minutes ?? 0)) }));
       }
+      return true;
     } catch (e) {
       setError(errText(e));
-      setPlans({ shortest: null, terrain: null });
+      return false;
     } finally {
       setBusy(false);
     }
@@ -63,7 +87,7 @@ export default function App() {
     (async () => {
       try {
         const [s, o, d, def, sci] = await Promise.all([api.studyArea(), api.observations(), api.datasets(), api.defaultMission(), api.scienceSites()]);
-        setSa(s); setObs(o); setDs(d); setSciSites(sci.sites); setReq(def.request); setConsumableLabel(def.labels.consumable_label);
+        setSa(s); setObs(o); setDs(d); setReq(def.request); setSites(sci.sites);
         evaluate(def.request);
       } catch (e) {
         setError(errText(e));
@@ -71,120 +95,143 @@ export default function App() {
     })();
   }, [evaluate]);
 
-  const [sciSites, setSciSites] = useState<ScienceSite[]>([]);
+  const chosen = req?.route_choice ?? "terrain";
+  const chosenPlan = plans[chosen];
+  const otherPlan = plans[chosen === "terrain" ? "shortest" : "terrain"];
+  const a = chosenPlan?.assessment ?? null;
 
-  const chosenPlan = req?.route_choice === "shortest" ? plans.shortest : plans.terrain;
-  const otherPlan = req?.route_choice === "shortest" ? plans.terrain : plans.shortest;
-
+  const closeGuide = () => { setGuide(false); try { localStorage.setItem(GUIDE_KEY, "1"); } catch { /* private mode */ } };
   const onPick = (mode: PickMode, p: XY) => {
     if (!req) return;
     if (mode === "habitat") setReq({ ...req, habitat: p });
     if (mode === "zone") setCont((c) => ({ ...c, center: p }));
     setPick("none");
   };
-
-  const inject = async () => {
+  const runScenario = async () => {
     if (!req) return;
     const body: ReplanRequest = {
       mission: req, elapsed_min: cont.elapsed_min, response_mode: cont.response_mode, consumable_loss_units: cont.consumable_loss_units,
       event: { type: "BLOCKED_ZONE", radius_m: cont.radius_m, center: cont.center, position_fraction: cont.position_fraction },
     };
     setReplanBusy(true); setReplanErr(null);
-    try {
-      setReplan(await api.replan(body));
-      setReplanReq(body);
-    } catch (e) {
-      setReplanErr(errText(e)); setReplan(null);
-    } finally {
-      setReplanBusy(false);
-    }
+    try { setReplan(await api.replan(body)); setReplanReq(body); } catch (e) { setReplanErr(errText(e)); setReplan(null); } finally { setReplanBusy(false); }
   };
-
   const downloadReport = async () => {
     if (!req) return;
     try {
       const rep = await api.report(req, replanReq);
       const url = URL.createObjectURL(new Blob([JSON.stringify(rep, null, 2)], { type: "application/json" }));
-      const a = document.createElement("a");
-      a.href = url; a.download = "eva-pathfinder-report.json"; a.click();
+      const el = document.createElement("a");
+      el.href = url; el.download = "eva-pathfinder-report.json"; el.click();
       URL.revokeObjectURL(url);
-    } catch (e) {
-      setError(errText(e));
-    }
+    } catch (e) { setError(errText(e)); }
+  };
+  const next = async () => {
+    if (!req) return;
+    if (step === 1 && (stale || !chosenPlan)) { if (await evaluate(req)) setStep(2); return; }
+    setStep((s) => (Math.min(5, s + 1) as StepId));
   };
 
   const mapRoutes: MapRoute[] = useMemo(() => {
-    const out: MapRoute[] = [];
-    if (replan) {
-      out.push({ id: "before", points: replan.before.legs.flatMap((l) => l.route?.polyline_xy_m ?? []), color: "#9aa0a6", dashed: true, label: "Remaining route before event", weight: 3 });
-      out.push({ id: "after", points: replan.after.legs.flatMap((l) => l.route?.polyline_xy_m ?? []), color: "#5dd39e", label: "Replanned route after simulated event", weight: 4 });
-      out.push({ id: "chosen", points: legsPolyline(chosenPlan), color: "#ff8c42", label: "Original plan", weight: 2 });
-    } else {
-      if (otherPlan) out.push({ id: "other", points: legsPolyline(otherPlan), color: req?.route_choice === "shortest" ? "#ff8c42" : "#5ec8e5", dashed: true, label: req?.route_choice === "shortest" ? "Terrain-aware" : "Shortest feasible", weight: 3 });
-      if (chosenPlan) out.push({ id: "chosen", points: legsPolyline(chosenPlan), color: req?.route_choice === "shortest" ? "#5ec8e5" : "#ff8c42", label: req?.route_choice === "shortest" ? "Shortest feasible (selected)" : "Terrain-aware (selected)" });
+    if (replan && step === 4) {
+      return [
+        { id: "before", points: replan.before.legs.flatMap((l) => l.route?.polyline_xy_m ?? []), color: "#85858b", dashed: true, label: "Old path home", weight: 2 },
+        { id: "after", points: replan.after.legs.flatMap((l) => l.route?.polyline_xy_m ?? []), color: "#4cc38a", label: "New path home", weight: 3 },
+      ];
     }
+    const out: MapRoute[] = [];
+    const altLabel = chosen === "terrain" ? "Shortest" : "Terrain-aware";
+    if (otherPlan) out.push({ id: "alt", points: poly(otherPlan), color: "#ededed", dashed: true, label: altLabel, weight: 2 });
+    if (chosenPlan) out.push({ id: "sel", points: poly(chosenPlan), color: "#ff7a45", label: `${chosen === "terrain" ? "Terrain-aware" : "Shortest"} (selected)`, weight: 3 });
     return out;
-  }, [replan, chosenPlan, otherPlan, req?.route_choice]);
+  }, [replan, step, chosenPlan, otherPlan, chosen]);
 
   if (!sa || !req) {
-    return <main className="loading"><h1>EVA Pathfinder</h1><p role="status">{error ?? "Loading Jezero study area…"}</p></main>;
+    return (
+      <main className="boot">
+        <Mark /><h1>EVA Pathfinder</h1>
+        <p role="status" className={error ? "neg" : "m"}>{error ?? "Loading the Jezero Crater study area…"}</p>
+      </main>
+    );
   }
 
-  const verified = ds ? ds.datasets.filter((d) => d.verification_status === "AVAILABLE_VERIFIED").length : 0;
-  const titles = Object.fromEntries(sa.layers.map((l) => [l.layer_id, { title: l.title, level: l.evidence_level }]));
+  const t = routeTotals(chosenPlan);
+  const summaries: Record<StepId, string> = {
+    1: `${req.stops.length} stop${req.stops.length > 1 ? "s" : ""} · ${req.profile.max_slope_deg}° limit · ${req.budget.time_available_min} min`,
+    2: t ? `${fmt(t.length !== null ? t.length / 1000 : null, 2, "km")} round trip` : busy ? "Computing…" : "Not computed",
+    3: a ? (a.status === "FEASIBLE" ? `${Math.round(a.totals.time_margin_min ?? 0)} min margin` : a.reason_codes[0]?.toLowerCase().replace(/_/g, " ") ?? a.status.toLowerCase()) : "Waiting for routes",
+    4: replan ? replan.status_change.replace("->", "→").toLowerCase() : "Not run",
+    5: ds ? `${ds.datasets.length} sources` : "",
+  };
+  const done = (id: StepId) => (id === 1 && !!chosenPlan && !stale) || (id === 2 && !!chosenPlan && step > 2) || (id === 3 && step > 3) || (id === 4 && !!replan);
 
   return (
-    <div className="app">
+    <div className="shell">
       <header className="topbar">
-        <div className="brand"><strong>EVA Pathfinder</strong><span>/ Guardian</span></div>
-        <div className="crumbs">
-          <span>{sa.name}</span>
-          <span className="muted">{sa.grid.lat_range_deg[0].toFixed(3)}–{sa.grid.lat_range_deg[1].toFixed(3)}°N, {sa.grid.lon_range_deg[0].toFixed(3)}–{sa.grid.lon_range_deg[1].toFixed(3)}°E</span>
-          <span className="muted">DEM: USGS CTX 20 m · {fmt(sa.dem_stats.valid_fraction * 100, 1)}% valid</span>
-          {ds && <span className="muted">{verified} sources verified by checksum</span>}
-          {STATIC_MODE && <span className="muted">Static demo: the Python planning engine runs in your browser (Pyodide)</span>}
-        </div>
-        <div className="top-status">
-          <Badge level="SIMULATED" /><span className="small">Operation Delta Return: simulated mission</span>
-          {chosenPlan && <StatusPill status={chosenPlan.assessment.status} />}
+        <div className="brand"><Mark /><span>EVA Pathfinder</span></div>
+        <div className="crumb"><span>Jezero Crater, Mars</span><span className="m">Operation Delta Return · simulated mission</span></div>
+        <div className="top-actions">
+          {a && !stale && <StatusBadge status={a.status} />}
+          <button type="button" className="btn sm ghost" onClick={() => setGuide(true)}><HelpCircle size={14} strokeWidth={1.75} aria-hidden="true" />How it works</button>
+          <button type="button" className="btn sm" onClick={downloadReport} disabled={!chosenPlan}><Download size={14} strokeWidth={1.75} aria-hidden="true" />Report</button>
         </div>
       </header>
-      <p className="disclaimer" role="note">Research prototype. Not certified for astronaut EVA navigation or life-support decisions. A 20 m DEM cannot show rocks or human-scale hazards. Habitat, crew and events are simulated.</p>
-      {error && <p className="bad banner" role="alert">{error}</p>}
-      <div className="layout">
-        <aside className="left">
-          <LayerPanel layers={layers} setLayers={(l) => setLayers(l as typeof layers)} showTraverse={showTraverse} setShowTraverse={setShowTraverse} showPhotos={showPhotos} setShowPhotos={setShowPhotos}
-            geologyUnits={sa.geology_units?.units ?? []} titles={titles} />
-          <MissionInputs req={req} setReq={setReq} sites={sciSites} onEvaluate={() => evaluate(req)} busy={busy} pickingHabitat={pick === "habitat"}
-            onPickHabitat={() => setPick(pick === "habitat" ? "none" : "habitat")} consumableLabel={consumableLabel} />
-        </aside>
-        <main className="center">
-          <MarsMap sa={sa} layers={layers} showTraverse={showTraverse} showPhotos={showPhotos} routes={mapRoutes} habitat={req.habitat}
-            stops={req.stops.map((s) => ({ id: s.stop_id, name: s.name, point: s.point }))} sites={sciSites} photos={obs?.photos ?? []}
-            zone={replan ? { center: replan.event.center_xy_m, radius_m: replan.event.radius_m } : cont.center ? { center: [cont.center.x_m, cont.center.y_m], radius_m: cont.radius_m } : null}
-            crew={replan ? { x_m: replan.current_position.x_m, y_m: replan.current_position.y_m } : null}
-            pickMode={pick} onPick={onPick} onSelectPhoto={setPhoto} />
-          <div className="map-legend small">
-            <span className="legend-item"><i className="sw sw-terrain" />Terrain-aware</span>
-            <span className="legend-item"><i className="sw sw-short dashed" />Shortest feasible</span>
-            {replan && <span className="legend-item"><i className="sw sw-after" />Replanned</span>}
-            {replan && <span className="legend-item"><i className="sw sw-before dashed" />Remaining (before event)</span>}
-            <span className="legend-item"><i className="dot dot-site" />Science site (rover localization)</span>
-            <span className="legend-item"><i className="dot dot-hab" />Habitat (simulated)</span>
-            <span className="legend-item"><i className="dot dot-zone" />Blocked zone (simulated)</span>
-          </div>
-          <div className="below">
-            <RouteComparison plans={plans} chosen={req.route_choice} />
-            <ContingencyLab state={cont} setState={setCont} planMinutes={chosenPlan?.assessment.totals.minutes ?? null} onInject={inject}
-              onPickZone={() => setPick(pick === "zone" ? "none" : "zone")} picking={pick === "zone"} result={replan} busy={replanBusy} error={replanErr} />
-          </div>
-        </main>
-        <aside className="right">
-          <GuardianPanel a={chosenPlan?.assessment ?? null} busy={busy} />
-          <EvidencePanel sa={sa} sites={sciSites} obs={obs} ds={ds} plan={chosenPlan} selectedPhoto={photo} onSelectPhoto={setPhoto} onDownloadReport={downloadReport} />
-        </aside>
-      </div>
+
+      <nav className="rail" aria-label="Planning steps">
+        <ol>
+          {STEPS.map(({ id, title, icon: Icon }) => (
+            <li key={id}>
+              <button type="button" className={`rail-item ${step === id ? "on" : ""}`} aria-current={step === id ? "step" : undefined} onClick={() => setStep(id)}>
+                <span className={`rail-n ${done(id) ? "done" : ""}`} aria-hidden="true">{done(id) ? <Check size={12} strokeWidth={2.25} /> : id}</span>
+                <span className="rail-body">
+                  <span className="rail-t"><Icon size={14} strokeWidth={1.5} aria-hidden="true" />{title}</span>
+                  <span className="rail-s">{summaries[id]}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <div className="rail-foot">
+          <p className="m">Real NASA/USGS terrain at 20 m. Habitat, crew and events are simulated</p>
+          <p className="m">Research prototype, not certified for EVA navigation</p>
+          {STATIC_MODE && <p className="m">The planning engine runs in your browser</p>}
+          <p className="m">Code and docs written with AI assistance (Claude Code by Anthropic), reviewed by team Midgardians. No AI-generated imagery</p>
+        </div>
+      </nav>
+
+      <main className="stage">
+        <MarsMap sa={sa} view={view} setView={setView} showTraverse={showTraverse} setShowTraverse={setShowTraverse} showPhotos={showPhotos} setShowPhotos={setShowPhotos}
+          routes={mapRoutes} habitat={req.habitat} stops={req.stops.map((s) => ({ id: s.stop_id, name: s.name, point: s.point }))} sites={sites} photos={obs?.photos ?? []}
+          zone={step === 4 ? (replan ? { center: replan.event.center_xy_m, radius_m: replan.event.radius_m } : cont.center ? { center: [cont.center.x_m, cont.center.y_m], radius_m: cont.radius_m } : null) : null}
+          crew={step === 4 && replan ? { x_m: replan.current_position.x_m, y_m: replan.current_position.y_m } : null}
+          pickMode={pick} onPick={onPick} onCancelPick={() => setPick("none")} onSelectPhoto={(id) => { setPhoto(id); setStep(5); }} focus={focus}
+          fitPoints={[...poly(plans.terrain), ...poly(plans.shortest), [req.habitat.x_m, req.habitat.y_m], ...sites.map((s) => [s.x_m, s.y_m] as [number, number])]} fitKey={planKey} />
+      </main>
+
+      <aside className="panel" aria-label={`Step ${step}`}>
+        <div className="panel-scroll">
+          {error && <p className="callout neg" role="alert">{error}</p>}
+          {busy && <p className="callout" role="status">{STATIC_MODE && !chosenPlan ? "Starting the planning engine in your browser, this takes 10-30 s the first time…" : "Computing routes on the elevation map…"}</p>}
+          {step === 1 && <PlanStep req={req} setReq={setReq} sites={sites} picking={pick === "habitat"} onPickHabitat={() => setPick(pick === "habitat" ? "none" : "habitat")}
+            onFocus={(x, y) => setFocus({ x, y, n: Date.now() })} />}
+          {step === 2 && <RoutesStep plans={plans} chosen={chosen} onChoose={(c) => setReq({ ...req, route_choice: c })} />}
+          {step === 3 && <FeasibilityStep a={a} names={Object.fromEntries(sites.map((s) => [s.id, s.name]))} />}
+          {step === 4 && <ContingencyStep state={cont} setState={setCont} planMinutes={a?.totals.minutes ?? null} onRun={runScenario} onPickZone={() => setPick(pick === "zone" ? "none" : "zone")}
+            picking={pick === "zone"} result={replan} busy={replanBusy} error={replanErr} />}
+          {step === 5 && <EvidenceStep sa={sa} sites={sites} obs={obs} ds={ds} plan={chosenPlan} selectedPhoto={photo} />}
+        </div>
+        <footer className="panel-foot">
+          {stale && step > 1 && <span className="m">Inputs changed. <button type="button" className="link" onClick={() => evaluate(req)}>Recompute</button></span>}
+          <button type="button" className="btn ghost" onClick={() => setStep((s) => (Math.max(1, s - 1) as StepId))} disabled={step === 1}><ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />Back</button>
+          {step < 5 && (
+            <button type="button" className="btn primary" onClick={next} disabled={busy}>
+              {step === 1 ? (stale || !chosenPlan ? "Compute routes" : "See routes") : `Next: ${STEPS[step].title}`}<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
+            </button>
+          )}
+        </footer>
+      </aside>
+      <Guide open={guide} onClose={closeGuide} />
+      <p className="sr-only" aria-live="polite">{a ? `Plan ${a.status.toLowerCase()}, total ${fmtMin(a.totals.minutes)}` : ""}</p>
     </div>
   );
 }
-

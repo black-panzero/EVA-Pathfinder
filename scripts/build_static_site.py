@@ -20,10 +20,9 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app.api.main import app, repo  # noqa: E402
 from app.infrastructure.repositories import LAYER_FILES  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 OUT = ROOT / "frontend" / "public" / "static"
 
@@ -35,7 +34,8 @@ def main() -> None:
     for sub in ("data", "api", "layers", "photos"):
         (OUT / sub).mkdir(parents=True)
     np.save(OUT / "data" / "dem_crop.npy", r.grid.elevation_m.astype("float32"))
-    for name in ("geology_units.npy", "geology_units.json", "manifest.json"):
+    shutil.copy2(ROOT / "config" / "mission_defaults.json", OUT / "data" / "mission_defaults.json")
+    for name in ("geology_units.npy", "geology_units.json", "manifest.json", "science_sites.json"):
         src = r.dir / name
         if src.exists():
             shutil.copy2(src, OUT / "data" / name)

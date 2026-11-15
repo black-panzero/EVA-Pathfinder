@@ -4,7 +4,9 @@ Date: 2026-11-15. Author of this build: AI coding agent (Claude Code), working f
 
 ## Handoff completeness
 
-The master prompt lists ten handoff files. Only two were present in the repository:
+**Update 2026-11-16:** the full handoff set (03-08, challenge brief, AGENTS.md, CLAUDE.md, example configs, official 2026 guide PDF) arrived in `EVA_Pathfinder_Handoff/`. Four audit agents checked the build against every document; findings and fixes are listed under "Handoff conformance pass" below. The table describes the situation at initial build time.
+
+The master prompt lists ten handoff files. At initial build time only two were present in the repository:
 
 | Expected | Present? | Consequence |
 |---|---|---|
@@ -37,3 +39,19 @@ The master prompt lists ten handoff files. Only two were present in the reposito
 - Central-difference slope skipped the centre cell, so a no-data cell got a finite slope and would have been treated as known terrain. Fixed: NaN cells and their 4-neighbours now get NaN slope, and the traversal mask also checks elevation directly.
 - A request containing `NaN` produced a 500, because the validation error tried to echo NaN as JSON. Fixed: the validation handler returns 422 without echoing the input.
 - In the browser, clicking a marker while in "pick zone" mode was swallowed by the marker, so the zone could not be placed on the habitat. Fixed: markers and paths ignore pointer events while picking. Verified with Playwright.
+
+## Handoff conformance pass (2026-11-16)
+
+Four parallel read-only audits checked the build against every handoff document. The verdict was that the core holds: real data, Mars CRS, validated routing, round-trip feasibility, honest contingency and provenance. No rebuild was needed; the gaps below were fixed.
+
+| Document | Gap found | Fix |
+|---|---|---|
+| 03 + 2026 guide PDF | No title slide in the storyboard; video script lacked team/challenge intro; AI disclosure only in docs, not in the project; credits incomplete; stale or over-strong wording ("safety reserve", "Live demo") | 7-slide storyboard with title slide; timed 30 s script; disclosure in the app rail, the guide, a meta tag, `package.json` and `docs/SI_DISCLOSURE.md`; Pyodide, fonts, icons and test libraries credited; "planning reserve" wording; planned URL labelled not live |
+| 04 data catalog | No per-product `data/source_manifest.json`; DOIs missing; DTM caveats missing; three sources marked verified without hashes; no georeferenced slope/coverage/ortho GeoTIFFs; MEDA quality info not reported | All added by `scripts/prepare_data.py`. Every derived value is unchanged byte for byte. The 8.1 × 4.5 km window (vs a 2-4 km suggestion) is kept and justified in `manifest.json` `deviations` |
+| 05 plan | `docs/IMPLEMENTED_FEATURES.md` missing; smoothing status undocumented | Added; smoothing documented as deliberately disabled (R-09) |
+| 06 tests | About 12 IDs without explicit tests; verification report stale | `backend/tests/test_handoff_acceptance.py` (21 tests). The new D-05 test caught a real gap: the pamphlet source had no producer. Fixed. Report refreshed |
+| 08 contracts | Field names, request shapes and error codes differed from the contract | Added without breaking anything: both request shapes accepted, contract fields added to responses, `error.contract_code`, `map_contract`, row/col cells, `SIMULATED_BLOCKAGE`, mission template translation, `MissionState` enum (`test_contracts_v08.py`, 24 tests). Not done: an authority (IAU/EPSG) `crs_id` (a documented local-frame id is used instead), acquisition dates (not in the source metadata), and a persistent mission store |
+| AGENTS.md / CLAUDE.md | Not at the repo root | Copied to the root together with the handoff documents 03-08 and the challenge brief |
+| UI (user request) | Interface hard to navigate | Redesigned as a five-step workflow with a first-visit guide, a map view switcher and provenance dots. Keyboard and mobile operation are smoke-tested |
+
+**Deploy:** the custom domain `midgardians.darelladero.tech` is set through `frontend/public/CNAME`, and the static build uses base path `/`.

@@ -10,6 +10,14 @@ export const fmtMin = (m: number | null | undefined): string => {
   return h > 0 ? `${h} h ${mm.toString().padStart(2, "0")} min` : `${mm} min`;
 };
 
+/** Compact clock-style duration for figures, e.g. 3:36 h or 42 min. */
+export const fmtHM = (m: number | null | undefined): string => {
+  if (m === null || m === undefined || !Number.isFinite(m)) return "n/a";
+  if (m < 60) return `${Math.round(m)} min`;
+  const h = Math.floor(m / 60);
+  return `${h}:${Math.round(m - h * 60).toString().padStart(2, "0")} h`;
+};
+
 export const LEVEL_LABEL: Record<EvidenceLevel, string> = {
   NASA_OBSERVATION: "NASA observation",
   DERIVED: "Derived",

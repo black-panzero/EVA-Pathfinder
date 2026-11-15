@@ -178,7 +178,23 @@
           "max": 731.84,
           "n": 320
         }
-      ]
+      ],
+      "quality": {
+        "rows_in_file": 49986,
+        "excluded_empty": 0,
+        "excluded_unparseable_or_nonfinite": 0,
+        "excluded_other_sol_or_bad_lmst": 0,
+        "samples_used": 49986,
+        "pressure_uncertainty_present": 0,
+        "pressure_uncertainty_missing": 49986,
+        "transducer_usage": {
+          "1": 49986
+        },
+        "label_definitions": {
+          "PRESSURE_UNCERTAINTY": "Pressure uncertainty (PDS label)",
+          "TRANSDUCER": "Transducer used: 1 / 2 (PDS label)"
+        }
+      }
     },
     {
       "variable": "UPWARD_LW_IRRADIANCE",
@@ -356,8 +372,60 @@
           "n": 352
         }
       ],
+      "quality": {
+        "rows_in_file": 44008,
+        "excluded_empty": 0,
+        "excluded_unparseable_or_nonfinite": 0,
+        "excluded_other_sol_or_bad_lmst": 0,
+        "samples_used": 44008,
+        "upward_lw_uncertainty_present": 44008,
+        "upward_lw_uncertainty_missing": 0,
+        "flag_counts": {
+          "RSM_HEAD_OUTSIDE_TIRS_UPWARD_LOOKING_FOV": {
+            "0": 44008
+          },
+          "WHEEL_OUTSIDE_TIRS_DOWNWARD_LOOKING_FOV": {
+            "empty": 44008
+          },
+          "SUN_OUTSIDE_TIRS_FOV": {
+            "1": 37258,
+            "0": 6750
+          },
+          "ROVER_LOW_TILT": {
+            "1": 44008
+          },
+          "TIRS_GROUND_FOOTPRINT_NOT_IN_SHADOW": {
+            "1": 38789,
+            "0": 5219
+          },
+          "ROVER_HGA_OFF": {
+            "empty": 44008
+          },
+          "SKYCAM_OFF": {
+            "empty": 44008
+          },
+          "ROVER_STILL": {
+            "1": 43985,
+            "0": 23
+          }
+        },
+        "flag_definitions": {
+          "RSM_HEAD_OUTSIDE_TIRS_UPWARD_LOOKING_FOV": "0 = RSM head obstructing upward FoV, 1 = outside",
+          "WHEEL_OUTSIDE_TIRS_DOWNWARD_LOOKING_FOV": "0 = front right wheel obstructing downward FoV, 1 = outside",
+          "SUN_OUTSIDE_TIRS_FOV": "0 = Sun in upward FoV, 1 = Sun outside FoV",
+          "ROVER_LOW_TILT": "0 = tilt >= 20 deg, 1 = tilt <= 20 deg",
+          "TIRS_GROUND_FOOTPRINT_NOT_IN_SHADOW": "0 = ground footprint shadowed by rover, 1 = not shadowed",
+          "ROVER_HGA_OFF": "0 = HGA on, 1 = off",
+          "SKYCAM_OFF": "0 = SkyCam on, 1 = off",
+          "ROVER_STILL": "0 = rover moving, 1 = motionless"
+        },
+        "flag_note": "Definitions from the PDS label (WE__0684...DER_TIRS...P01.xml). 'empty' = flag not given for that sample."
+      },
       "note": "Upward long-wave irradiance from the ground; a proxy for ground warmth, not air temperature."
     }
   ],
-  "aggregation": "Arithmetic mean/min/max per Local Mean Solar Time hour of all finite samples for this sol. Quality flags in the companion columns were not applied beyond excluding empty values."
+  "aggregation": "Arithmetic mean/min/max per Local Mean Solar Time hour of the kept samples for this sol (see filters_applied). Quality flags were not applied as filters.",
+  "filters_applied": "Samples kept: value column non-empty, parses as a finite float, and LMST string contains 'M' and starts with '00684M' (i.e. belongs to sol 684). No quality-flag, uncertainty or transducer filtering was applied; flag/uncertainty columns are summarised per series under 'quality' (counts over the samples used) so a reader can judge them.",
+  "product_level": "PDS 'data_derived_env' (derived, not calibrated) P01 files",
+  "citation": "Rodriguez-Manfredi et al. (2021), Mars 2020 MEDA bundle, DOI 10.17189/1522849"
 }

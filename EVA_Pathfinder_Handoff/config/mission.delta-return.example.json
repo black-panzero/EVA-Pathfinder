@@ -1,0 +1,29 @@
+{
+  "$comment": "Template only. Coordinates deliberately null until a real mapped study area is chosen and validated.",
+  "mission_id": "operation-delta-return",
+  "title": "Operation Delta Return",
+  "status": "NOT_YET_CONFIGURED",
+  "target_body": "Mars",
+  "region": "Jezero Crater, exact coverage pending validation",
+  "dataset_id": "ctx_dem_jezero_trn_2020",
+  "origin": null,
+  "science_stops": [],
+  "crew_count_simulated": 2,
+  "travel_mode": "WALKING_SIMULATED",
+  "speed_m_per_min_assumed": 30.0,
+  "max_derived_slope_deg_assumed": 25.0,
+  "max_duration_min_assumed": 240.0,
+  "activity_duration_min_assumed": 20.0,
+  "illustrative_consumable": {
+    "name": "resource_units",
+    "initial_units": 240.0,
+    "rate_units_per_min_assumed": 1.0,
+    "minimum_reserve_fraction": 0.25
+  },
+  "uncertainty_policy": "BLOCK_MISSING_DEM",
+  "notes": [
+    "All travel parameters are illustrative software test defaults, not validated NASA astronaut physiology.",
+    "The origin and geologic targets are selected only after verifying real DEM/imagery common coverage.",
+    "Blocked-corridor contingency is simulated and may be enabled after base route calculation."
+  ]
+}

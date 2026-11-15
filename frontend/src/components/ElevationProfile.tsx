@@ -15,10 +15,10 @@ export function itinerary(legs: LegDTO[]): { d: number; z: number }[] {
   return out;
 }
 
-export function ElevationProfile({ series, height = 170 }: { series: ProfileSeries[]; height?: number }) {
+export function ElevationProfile({ series, height = 150 }: { series: ProfileSeries[]; height?: number }) {
   const data = series.map((s) => ({ ...s, pts: itinerary(s.legs) })).filter((s) => s.pts.length > 1);
   if (!data.length) return <p className="muted">No computed route to profile.</p>;
-  const W = 640, H = height, pad = { l: 52, r: 12, t: 10, b: 28 };
+  const W = 400, H = height, pad = { l: 44, r: 8, t: 8, b: 24 };
   const all = data.flatMap((s) => s.pts);
   const dMax = Math.max(...all.map((p) => p.d));
   let zMin = Math.min(...all.map((p) => p.z)), zMax = Math.max(...all.map((p) => p.z));
@@ -45,10 +45,10 @@ export function ElevationProfile({ series, height = 170 }: { series: ProfileSeri
           <polyline key={s.label} fill="none" stroke={s.color} strokeWidth={2} strokeDasharray={s.dashed ? "6 4" : undefined}
             points={s.pts.map((p) => `${sx(p.d).toFixed(1)},${sy(p.z).toFixed(1)}`).join(" ")} />
         ))}
-        <text x={12} y={pad.t + 8} className="tick" transform={`rotate(-90 12 ${H / 2})`}>m (geoid)</text>
+        
       </svg>
       <figcaption className="muted small">
-        DEM samples at 20 m cell centres along each computed route (DERIVED). Legend: {data.map((s) => <span key={s.label} className="legend-item"><i style={{ background: s.color }} />{s.label}</span>)}
+        Metres relative to the Mars geoid, sampled every 20 m along each route · {data.map((s) => <span key={s.label} className="legend-item"><i style={{ background: s.color }} />{s.label}</span>)}
       </figcaption>
     </figure>
   );

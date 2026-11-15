@@ -18,7 +18,7 @@ async function boot(base: string): Promise<PyBridge> {
     py.FS.writeFile(path, text);
   }
   py.FS.mkdirTree("/data");
-  for (const f of ["dem_crop.npy", "geology_units.npy", "geology_units.json", "manifest.json"]) {
+  for (const f of ["dem_crop.npy", "geology_units.npy", "geology_units.json", "manifest.json", "mission_defaults.json", "science_sites.json"]) {
     const res = await fetch(`${base}static/data/${f}`);
     if (!res.ok) continue;
     py.FS.writeFile(`/data/${f}`, new Uint8Array(await res.arrayBuffer()));

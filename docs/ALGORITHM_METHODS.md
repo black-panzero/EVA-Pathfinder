@@ -20,7 +20,7 @@ Code: `backend/app/domain/` (`terrain.py`, `navigation.py`, `mission.py`, `conti
 - Two policies share the same hard exclusions:
   - `shortest-feasible`: w_s = 0, minimum ground length.
   - `terrain-aware`: w_s = 3 by default.
-- Post-validation (`validate_route`): every cell passable, every step 8-adjacent, no corner cut. An invalid path would be a server error and is never returned. No smoothing is applied.
+- Post-validation (`validate_route`): every cell passable, every step 8-adjacent, no corner cut. An invalid path would be a server error and is never returned. Path smoothing is deliberately disabled (handoff test R-09): the returned path is exactly the validated cell sequence.
 - Failure diagnosis: on `NO_ROUTE`, the search is re-run with one constraint relaxed at a time (slope limit, unknown policy, scenario block). This adds `SLOPE_EXCEEDS_LIMIT`, `UNMAPPED_TERRAIN` or `BLOCKED_BY_SCENARIO_EVENT`. A start or goal cell on impassable terrain gives `START_IMPASSABLE` / `GOAL_IMPASSABLE` with the cause.
 
 ## 3. Route metrics (from the same cell path)

@@ -14,6 +14,7 @@
     "caption": "NASA's Mars Perseverance rover acquired this image using its onboard Left Navigation Camera (Navcam). The camera is located high on the rover's mast and aids in driving. \n\nThis image was acquired on Jan. 22, 2023 (Sol 684) at the local mean solar time of 13:23:49.",
     "credit": "NASA/JPL-Caltech",
     "source_url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J",
+    "usage_terms": "NASA/JPL-Caltech raw images; NASA media guidelines: credit required, not endorsed",
     "full_res_url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00684/ids/edr/browse/ncam/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J01.png",
     "geolocation": {
       "basis": "Rover site 32 / drive 1062 localization record matched to the image's site/drive metadata",
@@ -29,7 +30,13 @@
       "site": 32,
       "drive": 1062,
       "rover_elev_geoid_m": -2545.266,
-      "dem_elev_m": -2546.95
+      "dem_elev_m": -2546.95,
+      "site_anchor_record": {
+        "site": 32,
+        "drive": 250
+      },
+      "distance_to_site_anchor_m": 54.6,
+      "distance_note": "This image's site/drive record (32/1062) is ~55 m (ground distance, east-west scaled by cos(latitude)) from the site's anchor record (32/250) used for 'Three Forks Sample Depot'."
     },
     "evidence_level": "NASA_OBSERVATION"
   },
@@ -48,6 +55,7 @@
     "caption": "NASA's Mars Perseverance rover acquired this image using its onboard Left Navigation Camera (Navcam). The camera is located high on the rover's mast and aids in driving. \n\nThis image was acquired on July 19, 2022 (Sol 502) at the local mean solar time of 16:23:49.",
     "credit": "NASA/JPL-Caltech",
     "source_url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J",
+    "usage_terms": "NASA/JPL-Caltech raw images; NASA media guidelines: credit required, not endorsed",
     "full_res_url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00502/ids/edr/browse/ncam/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J01.png",
     "geolocation": {
       "basis": "Rover site 26 / drive 1222 localization record matched to the image's site/drive metadata",
@@ -63,7 +71,13 @@
       "site": 26,
       "drive": 1222,
       "rover_elev_geoid_m": -2523.167969,
-      "dem_elev_m": -2519.85
+      "dem_elev_m": -2519.85,
+      "site_anchor_record": {
+        "site": 26,
+        "drive": 1222
+      },
+      "distance_to_site_anchor_m": 0.0,
+      "distance_note": "This image's site/drive record (26/1222) is ~0 m (ground distance, east-west scaled by cos(latitude)) from the site's anchor record (26/1222) used for 'Wildcat Ridge (delta front)'."
     },
     "evidence_level": "NASA_OBSERVATION"
   }

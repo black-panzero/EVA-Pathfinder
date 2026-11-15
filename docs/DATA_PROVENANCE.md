@@ -17,7 +17,9 @@ All sources are allowlisted in `config/sources.json`. `scripts/prepare_data.py` 
 ## Coordinate reference
 
 - CRS (DEM and ortho): `Equirectangular Mars 2000 Sphere IAU`, sphere radius 3,396,190 m, standard parallel 0°, central meridian 0°, units metre, north-up (checked: no rotation terms, negative y step).
-- Longitudes are east-positive (0-360). On a sphere, planetocentric and planetographic latitude are identical.
+- Longitudes are east-positive. The native CRS has central meridian 0 (domain −180..180); values in this study area are 77.3-77.5 °E, identical in either convention. On a sphere, planetocentric and planetographic latitude are identical.
+- DOIs: DTM https://doi.org/10.5066/P906QQT8 · ortho https://doi.org/10.5066/P9GV1ND3 · geology https://doi.org/10.3133/sim3464 · MEDA https://doi.org/10.17189/1522849 (all checked to resolve on 2026-11-16).
+- A per-product source manifest in the handoff's field format is at `data/source_manifest.json`. Georeferenced outputs `slope_deg.tif`, `valid_coverage.tif` and `ortho_crop.tif` sit beside `dem_crop.tif`.
 - Study-area window in the source DEM: `col_off 516, row_off 690, width 405, height 225`.
 - Extent: 77.33457-77.47122 °E, 18.41246-18.48838 °N. Origin easting 4,583,983.251 m, northing top 1,095,893.140 m.
 - Local API frame: `x_m = easting − origin`, `y_m = northing − bottom`, in projected metres. East-west ground metres = projected × cos(lat), which is 0.9486 at the centre.
@@ -46,7 +48,7 @@ Each artifact in `manifest.json` carries `artifact_id`, `source_ids`, `processin
 
 | Photo | Site | Geolocation basis |
 |---|---|---|
-| `NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J` (Navcam left, sol 684) | Three Forks depot | Image metadata site 32 / drive 1062 matched to a published localization record with the same site/drive |
+| `NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J` (Navcam left, sol 684) | Three Forks depot | Image metadata site 32 / drive 1062 matched to a published localization record with the same site/drive (about 55 m from the site's anchor record, site 32 / drive 250) |
 | `NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J` (Navcam left, sol 502) | Wildcat Ridge | Image metadata site 26 / drive 1222 matched to the localization record used for the site |
 
 Credit: NASA/JPL-Caltech. These are raw, unprocessed browse images. Each one links to its NASA raw-image page.

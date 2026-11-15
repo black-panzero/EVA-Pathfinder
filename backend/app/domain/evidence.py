@@ -41,7 +41,8 @@ class EventLog:
     def __init__(self) -> None:
         self._events: list[DomainEvent] = []
 
-    def record(self, name: str, **data: object) -> None:
+    def record(self, name: str | Enum, **data: object) -> None:
+        name = str(name.value) if isinstance(name, Enum) else name  # DomainEventName or plain string
         self._events.append(DomainEvent(name, dt.datetime.now(dt.UTC).isoformat(timespec="seconds"), dict(data)))
 
     def to_list(self) -> list[dict]:

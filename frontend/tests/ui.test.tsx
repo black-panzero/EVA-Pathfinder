@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { AssessmentDTO, EvaluateResponse, LegDTO } from "../src/api/types";
-import { AssessmentSummary } from "../src/components/GuardianPanel";
+import { AssessmentBlock, headline } from "../src/features/steps/FeasibilityStep";
 import { itinerary } from "../src/components/ElevationProfile";
-import { RouteComparison } from "../src/components/RouteComparison";
+import { RoutesStep } from "../src/features/steps/RoutesStep";
 import { fmt, fmtMin } from "../src/features/format";
 
 const route = (len: number, z0: number, z1: number) => ({
@@ -38,10 +38,12 @@ describe("itinerary profile", () => {
   });
 });
 
-describe("Guardian summary", () => {
+describe("Feasibility summary", () => {
   it("shows status as text and explains reason codes (colour is not the only cue)", () => {
-    render(<AssessmentSummary a={assessment("INFEASIBLE", ["INSUFFICIENT_TIME"], [leg("1", route(100, 0, 0))])} />);
-    expect(screen.getByText("INFEASIBLE")).toBeInTheDocument();
+    const a = assessment("INFEASIBLE", ["INSUFFICIENT_TIME"], [leg("1", route(100, 0, 0))]);
+    render(<AssessmentBlock a={a} />);
+    expect(screen.getByText("Infeasible")).toBeInTheDocument();
+    expect(headline(a)).toMatch(/does not fit the budget/);
     expect(screen.getByText("INSUFFICIENT_TIME")).toBeInTheDocument();
     expect(screen.getByText(/exceeds the time budget/)).toBeInTheDocument();
     expect(screen.getByText(/over limit/)).toBeInTheDocument();
@@ -51,8 +53,8 @@ describe("Guardian summary", () => {
 describe("Route comparison", () => {
   it("discloses coincident routes instead of hiding them", () => {
     const a = assessment("FEASIBLE", [], [leg("1", route(100, 0, 5)), leg("2", route(100, 5, 0))]);
-    render(<RouteComparison plans={{ shortest: plan(a), terrain: plan(a) }} chosen="terrain" />);
+    render(<RoutesStep plans={{ shortest: plan(a), terrain: plan(a) }} chosen="terrain" onChoose={() => {}} />);
     expect(screen.getByText(/same cell path/)).toBeInTheDocument();
-    expect(screen.getAllByText("200 m").length).toBe(2);
+    expect(screen.getAllByText("0.20 km").length).toBe(2);
   });
 });

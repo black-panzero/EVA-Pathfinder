@@ -23,5 +23,5 @@
 7. **MEDA.** One historical sol. Hourly means include every finite sample; quality-flag columns were not applied beyond dropping empty values. The PDS label lists the pressure-uncertainty unit as kelvin, which looks like a label error; the column was not used. This is not a forecast.
 8. **Blocked zones are circles.** Real hazards would have other shapes. The zone is a planning abstraction.
 9. **Single study area** (8.1 × 4.5 km), sized for interactive CPU planning. The grid size limit is enforced (`max_cells = 250,000`).
-10. **No authentication or rate limiting.** It is intended to run locally. Add both before exposing it publicly. CORS is limited to the local dev origins.
+10. **No authentication or rate limiting.** The FastAPI server is meant for local use; add both before exposing it publicly. CORS is limited to the local dev origins. The public build is static (GitHub Pages) and runs the engine in each visitor's browser, so there is no public server to protect.
 11. **Default-policy results.** On the default mission the terrain-aware route is 108 m longer outbound but has a lower maximum slope (12.5° vs 15.0°). This is one outcome under illustrative weights, not a general claim of improvement.

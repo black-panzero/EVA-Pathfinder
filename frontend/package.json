@@ -2,6 +2,9 @@
   "name": "eva-pathfinder-frontend",
   "private": true,
   "version": "1.0.0",
+  "description": "EVA Pathfinder: return-aware Mars EVA planner on real NASA/USGS Jezero Crater data (NASA Space Apps 2026, team Midgardians)",
+  "author": "Team Midgardians",
+  "x-ai-disclosure": "Code generated with AI assistance (Claude Code, Anthropic); reviewed by the team. No AI-generated media.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -12,7 +15,10 @@
     "build:static": "node scripts/copy-py.mjs && tsc -b && VITE_STATIC=1 vite build"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.1.0",
+    "@fontsource/ibm-plex-sans": "5.1.0",
     "leaflet": "1.9.4",
+    "lucide-react": "0.468.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
