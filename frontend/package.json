@@ -1,0 +1,31 @@
+{
+  "name": "eva-pathfinder-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "lint": "tsc -b --noEmit",
+    "build:static": "node scripts/copy-py.mjs && tsc -b && VITE_STATIC=1 vite build"
+  },
+  "dependencies": {
+    "leaflet": "1.9.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@types/leaflet": "1.9.14",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "jsdom": "25.0.1",
+    "typescript": "5.6.3",
+    "vite": "5.4.11",
+    "vitest": "2.1.8"
+  }
+}

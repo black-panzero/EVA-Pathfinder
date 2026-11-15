@@ -1,0 +1,28 @@
+{
+  "_comment": "ILLUSTRATIVE SCENARIO VALUES picked by the operator for a demo. None of these are astronaut-certified or derived from suit or physiology data. They are inputs the user can change in the UI.",
+  "mission_name": "Operation Delta Return",
+  "traversal_profile": {
+    "profile_id": "illustrative-walk-naismith",
+    "flat_speed_m_per_min": 40.0,
+    "ascent_rate_m_per_min": 10.0,
+    "max_slope_deg": 15.0,
+    "basis": "Naismith-style rule (time = horizontal distance / flat speed + total ascent / ascent rate). The structure comes from a terrestrial hiking rule of thumb; the numbers are illustrative."
+  },
+  "budgets": {
+    "time_available_min": 420.0,
+    "consumable_initial_units": 500.0,
+    "consumable_rate_traverse_per_min": 1.0,
+    "consumable_rate_activity_per_min": 0.6,
+    "reserve_fraction": 0.25,
+    "consumable_label": "Illustrative consumable (generic units)"
+  },
+  "route_policies": {
+    "shortest": {"policy_id": "shortest-feasible", "slope_weight": 0.0, "unknown_policy": "block", "unknown_weight": 0.0},
+    "terrain": {"policy_id": "terrain-aware", "slope_weight": 3.0, "unknown_policy": "block", "unknown_weight": 0.0}
+  },
+  "limits": {
+    "max_stops": 3,
+    "max_block_radius_m": 1000.0,
+    "max_time_available_min": 1440.0
+  }
+}

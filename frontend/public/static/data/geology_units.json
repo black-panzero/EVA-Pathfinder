@@ -1,0 +1,54 @@
+{
+  "units": [
+    {
+      "code": 1,
+      "symbol": "Nue",
+      "name": "Upper etched unit",
+      "note": "Upper etched unit: widely occurring olivine-rich unit with several surface textures.",
+      "color": "#d67d48",
+      "cells": 9214
+    },
+    {
+      "code": 2,
+      "symbol": "NHjf2",
+      "name": "Jezero fan 2 unit",
+      "note": "Jezero fan unit 2: topographically higher, younger member of the Jezero fan (delta) deposits.",
+      "color": "#6ea0c8",
+      "cells": 26470
+    },
+    {
+      "code": 3,
+      "symbol": "Aeb",
+      "name": "Eolian bedform unit",
+      "note": "Eolian bedform unit: young windblown bedforms (for example transverse aeolian ridges).",
+      "color": "#c4aa60",
+      "cells": 15181
+    },
+    {
+      "code": 4,
+      "symbol": "Nle",
+      "name": "Lower etched unit",
+      "note": "Lower etched unit: olivine-rich unit found only inside Jezero crater, the stratigraphically lower complement of the upper etched unit.",
+      "color": "#966eaa",
+      "cells": 9606
+    },
+    {
+      "code": 5,
+      "symbol": "cr",
+      "name": "Crater rim unit",
+      "note": "Crater rim unit.",
+      "color": "#78b478",
+      "cells": 1272
+    },
+    {
+      "code": 6,
+      "symbol": "Njf",
+      "name": "Jezero floor unit",
+      "note": "Jezero floor unit: crater-floor unit interpreted by the map authors to underlie the fan units; published age estimates range widely (see pamphlet).",
+      "color": "#dcc88c",
+      "cells": 29382
+    }
+  ],
+  "coverage_fraction": 1.0,
+  "source_crs": "MTM_clon77.5E"
+}

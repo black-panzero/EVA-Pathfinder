@@ -1,0 +1,15 @@
+# Exact versions verified in docs/VERIFICATION_REPORT.md (installed 2026-11-15)
+fastapi==0.163.1
+pydantic==2.14.3
+uvicorn[standard]==0.54.0
+numpy==2.5.4
+rasterio==1.5.2
+pyproj==3.8.0
+shapely==2.2.0
+pyogrio==0.13.0
+pillow==13.0.0
+httpx==0.28.1
+pytest==9.2.0
+ruff==0.17.5
+mypy==2.4.1
+playwright==1.65.2

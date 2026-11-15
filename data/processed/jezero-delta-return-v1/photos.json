@@ -1,0 +1,70 @@
+[
+  {
+    "photo_id": "NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J",
+    "file": "photos/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J_800.jpg",
+    "sha256": "a2c72bf6911e0c098ce2b81ea12143bf78ee0a8909a1be30a8474c3bef1b303b",
+    "site_id": "three-forks-depot",
+    "site_name": "Three Forks Sample Depot",
+    "instrument": "NAVCAM_LEFT",
+    "sol": 684,
+    "date_taken_utc": "2023-01-22T13:27:58.251",
+    "date_taken_mars": "Sol-00684M13:23:49.492",
+    "mast_azimuth_deg": "1.19157",
+    "mast_elevation_deg": "-34.2024",
+    "caption": "NASA's Mars Perseverance rover acquired this image using its onboard Left Navigation Camera (Navcam). The camera is located high on the rover's mast and aids in driving. \n\nThis image was acquired on Jan. 22, 2023 (Sol 684) at the local mean solar time of 13:23:49.",
+    "credit": "NASA/JPL-Caltech",
+    "source_url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J",
+    "full_res_url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00684/ids/edr/browse/ncam/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J01.png",
+    "geolocation": {
+      "basis": "Rover site 32 / drive 1062 localization record matched to the image's site/drive metadata",
+      "x_m": 4387.64,
+      "y_m": 2409.58,
+      "lon_deg": 77.40859222,
+      "lat_deg": 18.45311341,
+      "cell": [
+        104,
+        219
+      ],
+      "sol": 684,
+      "site": 32,
+      "drive": 1062,
+      "rover_elev_geoid_m": -2545.266,
+      "dem_elev_m": -2546.95
+    },
+    "evidence_level": "NASA_OBSERVATION"
+  },
+  {
+    "photo_id": "NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J",
+    "file": "photos/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J_800.jpg",
+    "sha256": "2dbad04095c80f4fd0db42f5a9ab5e580d7498b8baf640578050528f8e44de1f",
+    "site_id": "wildcat-ridge",
+    "site_name": "Wildcat Ridge (delta front)",
+    "instrument": "NAVCAM_LEFT",
+    "sol": 502,
+    "date_taken_utc": "2022-07-19T16:28:02.944",
+    "date_taken_mars": "Sol-00502M16:23:49.634",
+    "mast_azimuth_deg": "180.164",
+    "mast_elevation_deg": "24.769",
+    "caption": "NASA's Mars Perseverance rover acquired this image using its onboard Left Navigation Camera (Navcam). The camera is located high on the rover's mast and aids in driving. \n\nThis image was acquired on July 19, 2022 (Sol 502) at the local mean solar time of 16:23:49.",
+    "credit": "NASA/JPL-Caltech",
+    "source_url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J",
+    "full_res_url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00502/ids/edr/browse/ncam/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J01.png",
+    "geolocation": {
+      "basis": "Rover site 26 / drive 1222 localization record matched to the image's site/drive metadata",
+      "x_m": 4229.54,
+      "y_m": 2737.59,
+      "lon_deg": 77.40592495,
+      "lat_deg": 18.45864728,
+      "cell": [
+        88,
+        211
+      ],
+      "sol": 502,
+      "site": 26,
+      "drive": 1222,
+      "rover_elev_geoid_m": -2523.167969,
+      "dem_elev_m": -2519.85
+    },
+    "evidence_level": "NASA_OBSERVATION"
+  }
+]
