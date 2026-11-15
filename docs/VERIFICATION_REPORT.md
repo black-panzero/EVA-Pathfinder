@@ -13,6 +13,7 @@ Run date: 2026-11-15/16 (latest run 2026-11-15T21:41Z UTC). Machine: Intel Core 
 | Lint / types | `make lint` | ruff: all checks passed; mypy: no issues in 20 files; `tsc -b`: no errors |
 | Static production build | `VITE_BASE=/ npm run build:static` | Built; 16 Python engine files copied; `dist/CNAME` = `midgardians.darelladero.tech` |
 | Browser smoke, dev server | `make smoke` | Feasible plan; detour scenario Feasible → Feasible; enclosed habitat Feasible → **Infeasible** (`NO_ROUTE`); keyboard-only run reaches Routes; 0 px overflow at 390 px; 0 console errors; 0 failed API calls |
+| Browser smoke, live site | `scripts/browser_smoke.py --url https://midgardians.darelladero.tech/` | Passed on 2026-11-16: same results as below, served by GitHub Pages with HTTPS (Let's Encrypt certificate) |
 | Browser smoke, production static build | `scripts/browser_smoke.py --url <local static server>/` | Same results with the Python engine running in the browser (Pyodide), no backend server |
 
 The backend suite includes:
@@ -73,7 +74,6 @@ Default mission: habitat (landing localization) → Wildcat Ridge (60 min activi
 
 ## Not verified / not done
 
-- No public deployment yet. It needs the repository push and the Cloudflare DNS record, both human actions.
 - No slides or video uploaded.
 - No sub-pixel optical/DEM co-registration measurement.
 - Starlette prints a deprecation warning about `httpx` in the test client; it is harmless.

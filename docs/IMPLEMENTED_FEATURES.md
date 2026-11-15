@@ -19,7 +19,7 @@ The working / not-implemented matrix required by `05_IMPLEMENTATION_PLAN.md` §3
 | UI | Step-by-step workflow (Plan, Routes, Feasibility, Contingency, Evidence), first-visit guide, map view switcher, provenance labels | Working | `browser_smoke.py`, screenshots |
 | UI | Keyboard operation, text status alongside colour, mobile layout | Working (smoke-tested) | `browser_smoke.py` |
 | Deploy | Static build (Pyodide runs the same Python engine in the browser), parity-tested | Working locally | `test_static_bridge.py` |
-| Deploy | Public GitHub Pages site at the custom domain | Not done: needs the repo push and DNS (human actions) | `README.md` |
+| Deploy | Public site https://midgardians.darelladero.tech/ (GitHub Pages, HTTPS, Cloudflare DNS CNAME) | Working | live browser smoke test |
 | Submission | Form answers, storyboard, video script | Drafts ready | `SUBMISSION_FORM.md`, `NASA_SUBMISSION_DRAFT.md` |
 | Submission | Slides or video uploaded | Not done: human action | |
 | Out of scope | HiRISE terrain, 3D view, ROS 2, LLM commands, real-time weather | Not implemented (roadmap only) | |

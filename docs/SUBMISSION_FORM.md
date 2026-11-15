@@ -12,7 +12,7 @@ EVA Pathfinder is a hyperlocal Marswalk map and return-aware planner built on re
 **[Team to add]** Public link to either a deck of **at most 7 slides including the title slide** or a video of **at most 30 seconds**. Test it in an incognito window before pasting. Storyboard and video script: `docs/NASA_SUBMISSION_DRAFT.md`.
 
 ## Project
-https://black-panzero.github.io/EVA-Pathfinder/ (live app, verified). Code: https://github.com/black-panzero/EVA-Pathfinder. Switch to https://midgardians.darelladero.tech/ once the custom domain is live.
+https://midgardians.darelladero.tech/ (live app, verified). Code: https://github.com/black-panzero/EVA-Pathfinder
 
 ## Project Details
 
