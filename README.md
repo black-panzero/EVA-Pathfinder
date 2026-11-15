@@ -2,7 +2,7 @@
 
 Return-aware Marswalk planning on **real Jezero Crater terrain** (NASA Space Apps 2026, *Interplanetary Survival Guide: Martian Map*).
 
-**Planned public URL:** https://midgardians.darelladero.tech/ (GitHub Pages, custom domain). Not live until the repository is pushed and DNS is set; this line is updated only after an incognito check. The static build runs the same Python planning engine in the browser via Pyodide; first load takes about 15 s.
+**Live app:** https://black-panzero.github.io/EVA-Pathfinder/ (verified 2026-11-15 with a full browser smoke test). Custom domain https://midgardians.darelladero.tech/ is pending DNS. The static build runs the same Python planning engine in your browser via Pyodide; first load takes about 15 s.
 
 > **Research prototype. Not certified for astronaut EVA navigation or life-support decisions.** A 20 m DEM cannot show rocks or human-scale hazards. The habitat, crew and events are simulated.
 
@@ -73,7 +73,8 @@ docs/                        decisions, provenance, methods, limitations, verifi
 | Provenance badges, run manifest, JSON report | Working |
 | Responsive / mobile layout | Working (basic) |
 | HiRISE-scale terrain, 3D view, ROS 2 export, LLM commands | Not implemented (roadmap only) |
-| Public deployment, video, slides | Not done: human action |
+| Public deployment | Live on GitHub Pages; custom domain pending DNS |
+| Video, slides | Not done: human action |
 
 ## Methods, caveats, verification
 
