@@ -64,6 +64,7 @@ export interface ScienceSite extends SitePoint {
   kind: string; location_basis: string; science_summary: string; default_activity_min: number;
   citations: { title: string; url: string }[];
   mapped_geologic_unit?: { symbol: string; name: string; caveat: string } | null;
+  in_planning_area?: boolean; sample_sol?: number; short?: string; campaign?: string; rock_type?: string; samples?: string[];
 }
 export interface Habitat extends SitePoint { note: string; citation: string }
 export interface LayerInfo { layer_id: string; title: string; evidence_level: EvidenceLevel; image_url: string; bounds_xy_m: [[number, number], [number, number]] }
@@ -75,7 +76,9 @@ export interface StudyArea {
   extent_xy_m: [number, number]; scale: { east_west_ground_m_per_projected_m: number; center_lat_deg: number };
   dem_stats: { valid_fraction: number; min_m: number; max_m: number; slope_deg_p50: number; slope_deg_p95: number; slope_deg_max: number };
   habitat: Habitat; layers: LayerInfo[];
-  rover_traverse: { source_id: string; points: { x_m: number; y_m: number; sol: number; site: number; drive: number }[] };
+  rover_traverse: { source_id: string; points: { x_m: number; y_m: number; lon_deg?: number; lat_deg?: number; sol: number; site: number; drive: number; in_planning_area?: boolean }[] };
+  context?: { image_url: string; lon_range_deg: [number, number]; lat_range_deg: [number, number]; resolution_m: number; note: string } | null;
+  global_basemap?: { title: string; url_template: string; max_native_zoom: number; attribution: string; source_url: string } | null;
   geology_units: { units: GeologyUnit[]; coverage_fraction: number } | null; disclaimer: string;
 }
 export interface Photo {

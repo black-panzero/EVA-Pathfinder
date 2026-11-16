@@ -55,3 +55,12 @@ Four parallel read-only audits checked the build against every handoff document.
 | UI (user request) | Interface hard to navigate | Redesigned as a five-step workflow with a first-visit guide, a map view switcher and provenance dots. Keyboard and mobile operation are smoke-tested |
 
 **Deploy:** the custom domain `midgardians.darelladero.tech` is set through `frontend/public/CNAME`, and the static build uses base path `/`.
+
+## Map scope expansion (2026-11-16, user request)
+
+The user expected an "entire map" rather than one crop with three points. They chose "whole Mars → Jezero" and "all sample sites":
+- **Map projection:** switched to geographic coordinates (Leaflet plate carrée) over NASA's Mars Trek global tiles. Planning-frame metres convert to lon/lat exactly, because the source CRS is equirectangular with true scale at the equator. Scale bars are computed in Mars ground metres; no Earth geodesics are used.
+- **Context layers:** the whole 32 × 30 km CTX mosaic is shown as a 12 m context image, and Perseverance's full path is drawn.
+- **Routing area unchanged:** routing stays on the 8.1 × 4.5 km grid so planning stays fast in the browser. Sites outside it are context only and labelled as such.
+- **Sample sites:** 21 sites compiled from the Mars 2020 Initial Reports (coring sols and report coordinates) by a research agent; every URL was checked.
+- **Keyboard access:** a "Skip to step actions" link was added as the first focusable element. With 14 plannable sites the panel has many controls before its actions.

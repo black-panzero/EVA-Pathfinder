@@ -247,10 +247,19 @@ def manifest():
 def test_D02_science_sites_inside_grid_and_mars_crs(real_grid, manifest):
     sci = json.loads((PROCESSED / "science_sites.json").read_text())
     assert sci["sites"]
+    ctx = manifest["context"]
+    inside = [s for s in sci["sites"] if s["in_planning_area"]]
+    assert len(inside) >= 2  # routable targets exist
     for s in sci["sites"]:
-        r, c = real_grid.xy_to_cell(s["x_m"], s["y_m"])
-        assert real_grid.in_bounds(r, c)
-        assert np.isfinite(real_grid.elevation_m[r, c])
+        assert s["citations"], f"{s['id']} has no citation"
+        if s["in_planning_area"]:
+            r, c = real_grid.xy_to_cell(s["x_m"], s["y_m"])
+            assert real_grid.in_bounds(r, c) and np.isfinite(real_grid.elevation_m[r, c])
+            assert s["cell"] == [r, c]
+        else:  # context-only sites: really outside the routing grid, but inside the displayed USGS mosaic
+            assert not real_grid.contains_xy(s["x_m"], s["y_m"]) and s["cell"] is None
+            assert ctx["lon_range_deg"][0] <= s["lon_deg"] <= ctx["lon_range_deg"][1]
+            assert ctx["lat_range_deg"][0] <= s["lat_deg"] <= ctx["lat_range_deg"][1]
     assert "Mars" in manifest["crs"]["wkt"]
 
 

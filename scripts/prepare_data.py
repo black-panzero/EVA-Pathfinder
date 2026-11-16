@@ -266,6 +266,25 @@ def resolve_record(waypoints: list[dict], site: int, drive: int) -> dict:
     return (finals or hits)[0]
 
 
+def resolve_by_sol(waypoints: list[dict], sol: int) -> dict:
+    """Rover position on a given sol: the last end-of-drive localization on or before that sol."""
+    finals = [w for w in waypoints if w.get("final") == "y" and w["sol"] <= sol]
+    if not finals:
+        raise SystemExit(f"No rover localization on or before sol {sol}")
+    return max(finals, key=lambda w: (w["sol"], w["site"], w["drive"]))
+
+
+def place_any(grid: TerrainGrid, rec: dict) -> dict:
+    """Like place(), but allows positions outside the planning grid (context sites)."""
+    e, n = lonlat_to_eqc(rec["lon"], rec["lat"])
+    x, y = e - grid.origin_e_m, n - (grid.origin_n_m - grid.height * grid.res_m)
+    if grid.contains_xy(x, y):
+        return {**place(grid, rec), "in_planning_area": True}
+    return {"x_m": round(x, 2), "y_m": round(y, 2), "lon_deg": rec["lon"], "lat_deg": rec["lat"], "cell": None,
+            "sol": rec["sol"], "site": rec["site"], "drive": rec["drive"], "rover_elev_geoid_m": rec.get("elev_geoid"),
+            "dem_elev_m": None, "in_planning_area": False}
+
+
 def place(grid: TerrainGrid, rec: dict) -> dict:
     e, n = lonlat_to_eqc(rec["lon"], rec["lat"])
     x, y = e - grid.origin_e_m, n - (grid.origin_n_m - grid.height * grid.res_m)
@@ -298,15 +317,32 @@ def elevation_check(grid: TerrainGrid, waypoints: list[dict]) -> dict:
 
 
 def traverse_polyline(grid: TerrainGrid, waypoints: list[dict]) -> list[dict]:
+    """Every end-of-drive localization (whole mission); x/y in the planning frame, may lie outside it."""
     out = []
     for w in waypoints:
         if w.get("final") != "y":
             continue
         e, n = lonlat_to_eqc(w["lon"], w["lat"])
         x, y = e - grid.origin_e_m, n - (grid.origin_n_m - grid.height * grid.res_m)
-        if grid.contains_xy(x, y):
-            out.append({"x_m": round(x, 1), "y_m": round(y, 1), "sol": w["sol"], "site": w["site"], "drive": w["drive"]})
+        out.append({"x_m": round(x, 1), "y_m": round(y, 1), "lon_deg": round(w["lon"], 6), "lat_deg": round(w["lat"], 6),
+                    "sol": w["sol"], "site": w["site"], "drive": w["drive"], "in_planning_area": grid.contains_xy(x, y)})
     return out
+
+
+def write_context_image(ortho_path: Path, out_jpg: Path, factor: int = 2) -> dict:
+    """Whole source orthomosaic, block-averaged by `factor`, as a JPEG context layer with lon/lat bounds."""
+    from rasterio.enums import Resampling
+
+    with rasterio.open(ortho_path) as src:
+        h, w = src.height // factor, src.width // factor
+        img = src.read(1, out_shape=(h, w), resampling=Resampling.average)
+        b = src.bounds
+        res = src.transform.a * factor
+    Image.fromarray(img, "L").save(out_jpg, quality=82, optimize=True, progressive=True)
+    deg = 180.0 / math.pi / MARS_RADIUS_M
+    return {"file": out_jpg.name, "source_id": "usgs-m2020-trn-ctx-ortho-6m", "resolution_m": res, "size_px": [w, h],
+            "lon_range_deg": [round(b.left * deg, 6), round(b.right * deg, 6)], "lat_range_deg": [round(b.bottom * deg, 6), round(b.top * deg, 6)],
+            "evidence_level": "NASA_OBSERVATION", "note": "Whole Mars 2020 TRN CTX orthomosaic, block-averaged for display. Routing uses only the planning area."}
 
 
 # ----------------------------------------------------------------------------- alignment
@@ -735,16 +771,28 @@ def main() -> None:
     sites = []
     geo_raster = np.load(out / "geology_units.npy") if geo_info else None
     geo_lookup = {u["code"]: u for u in geo_info["units"]} if geo_info else {}
-    for s in science["sites"]:
-        p = place(grid, resolve_record(waypoints, **s["rover_record"]))
-        entry = {**{k: v for k, v in s.items() if k != "rover_record"}, **p}
-        if geo_raster is not None:
+    for s in science["sites"] + science.get("sample_sites", []):
+        if "rover_record" in s:
+            p = place_any(grid, resolve_record(waypoints, **s["rover_record"]))
+        else:
+            rec = dict(resolve_by_sol(waypoints, int(s["rover_sol"])))
+            rp = s.get("report_position")
+            if rp:  # NASA Initial Report coordinates are the authoritative position for the coring
+                rec.update({"lon": rp["lon"], "lat": rp["lat"], "elev_geoid": rp.get("elev_m", rec.get("elev_geoid"))})
+            p = place_any(grid, rec)
+            p["sample_sol"] = int(s["rover_sol"])
+            p["position_source"] = rp["source"] if rp else "NASA rover localization on or before the coring sol"
+        entry = {**{k: v for k, v in s.items() if k not in ("rover_record", "rover_sol", "report_position")}, **p}
+        if geo_raster is not None and p["cell"] is not None:
             code = int(geo_raster[p["cell"][0], p["cell"][1]])
             u = geo_lookup.get(code)
             entry["mapped_geologic_unit"] = {"symbol": u["symbol"], "name": u["name"], "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."} if u else None
         sites.append(entry)
     elev_check = elevation_check(grid, waypoints)
     traverse = traverse_polyline(grid, waypoints)
+
+    log("writing whole-mosaic context image")
+    context = write_context_image(ortho_src, out / "context_ortho.jpg")
 
     log("estimating optical/DEM registration")
     reg = registration_check(grid, ortho, ortho_meta["ratio"])
@@ -794,6 +842,7 @@ def main() -> None:
     lat_c = math.degrees((ytop_n - grid.height * grid.res_m / 2) / MARS_RADIUS_M)
     manifest = {
         "study_area_id": area["study_area_id"], "name": area["name"], "body": "Mars", "created_at": created, "processing_version": PROCESSING_VERSION,
+        "context": context,
         "crs": {"name": "Equirectangular Mars 2000 Sphere IAU", "wkt": grid.crs_wkt, "sphere_radius_m": MARS_RADIUS_M, "latitude_convention": "planetocentric (sphere: identical to planetographic)", "longitude_convention": "east-positive; native CRS central meridian 0, domain -180..180 (values here 77.3-77.5 E)", "lat_true_scale_deg": 0.0,
                 "local_frame": "x_m = easting - origin_easting; y_m = northing - origin_northing_bottom. Projected metres. East-west ground distance = projected distance * cos(latitude).",
                 "east_west_scale_factor_at_center": round(math.cos(math.radians(lat_c)), 6)},
@@ -811,6 +860,7 @@ def main() -> None:
             {**art("dem-crop", "dem_crop.tif", ["usgs-m2020-trn-ctx-dtm-20m"], "NASA_OBSERVATION", "m (geoid)", "20 m posts: cannot resolve rocks, small scarps or soil strength."),
              "nodata_value": source_raster["dem"]["crop_nodata_written"]},
             art("ortho", "ortho.png", ["usgs-m2020-trn-ctx-ortho-6m"], "NASA_OBSERVATION", "DN 0-255 (unstretched)", "Relative brightness only; illumination from the original CTX acquisitions.", 6.0),
+            art("context-ortho", "context_ortho.jpg", ["usgs-m2020-trn-ctx-ortho-6m"], "NASA_OBSERVATION", "DN 0-255, JPEG", "Whole source mosaic block-averaged to 12 m for display; lossy JPEG; not used for routing.", 12.0),
             art("hillshade", "hillshade.png", ["usgs-m2020-trn-ctx-dtm-20m"], "DERIVED", "relative shading", "Synthetic illumination az 315, alt 45."),
             art("elevation", "elevation.png", ["usgs-m2020-trn-ctx-dtm-20m"], "DERIVED", f"colour ramp {zmin:.0f} to {zmax:.0f} m", "Visualization only."),
             art("slope", "slope.png", ["usgs-m2020-trn-ctx-dtm-20m"], "DERIVED", "degrees, colour ramp 0-30", "Central-difference slope over 40 m baselines; one-sided at borders."),

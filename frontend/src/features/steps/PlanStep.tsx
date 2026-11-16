@@ -38,7 +38,7 @@ export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }
       <section className="group">
         <h3>Science stops <span className="meta">visited in this order</span></h3>
         <div className="site-list">
-          {sites.map((s, i) => {
+          {sites.filter((s) => s.in_planning_area !== false).map((s) => {
             const stop = req.stops.find((x) => x.stop_id === s.id);
             const order = req.stops.findIndex((x) => x.stop_id === s.id) + 1;
             return (
@@ -48,7 +48,7 @@ export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }
                   <span className="check" aria-hidden="true">{stop ? <span className="num">{order}</span> : <Check size={12} strokeWidth={2} opacity={0} />}</span>
                   <span className="grow">
                     <span className="t">{s.name}</span>
-                    <span className="m">{i === 0 ? "Organic-rich lake mudstone on the delta front" : "Backup cache of 10 sample tubes near the delta base"}</span>
+                    <span className="m">{s.short ?? [s.rock_type, s.campaign].filter(Boolean).join(" · ")}</span>
                   </span>
                 </button>
                 <button type="button" className="icon-btn" aria-label={`Show ${s.name} on the map`} onClick={() => onFocus(s.x_m, s.y_m)}><MapPin size={16} strokeWidth={1.5} /></button>
@@ -57,6 +57,9 @@ export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }
             );
           })}
         </div>
+        {sites.some((s) => s.in_planning_area === false) && (
+          <p className="note">{sites.filter((s) => s.in_planning_area === false).length} more Perseverance sample sites appear on the map as context. They lie outside the detailed planning area, so they can't be routed to yet</p>
+        )}
       </section>
 
       <section className="group">

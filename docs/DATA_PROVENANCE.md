@@ -44,6 +44,20 @@ Each artifact in `manifest.json` carries `artifact_id`, `source_ids`, `processin
 
 `dem_crop.tif` (NASA observation, cropped, not resampled), `ortho.png` (observation, unstretched DN), `hillshade.png`, `elevation.png`, `slope.png`, `geology.png` + `geology_units.npy` (derived), `science_sites.json`, `rover_traverse.json`, `photos.json` + `photos/*.jpg`, `meda.json`.
 
+## Sample sites (added 2026-11-16)
+
+`config/science_sites.json` → `sample_sites` holds 21 Perseverance rock and regolith sample sites, compiled in `config/sample_sites.research.json` from the **Mars 2020 Initial Reports** (volumes 1-5, PDS Geosciences sample dossier, https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/) and NASA's "Meet the Mars Samples" pages.
+- **Sols:** the **coring** sol from each sample designation (`M2020-<sol>-<n>`). NASA's public sample table lists sealing sols, which differ for six sites.
+- **Positions:** the rover latitude/longitude printed in the Initial Report for each coring. Rover site/drive comes from the last NASA localization on or before that sol, and agrees with the report to within about 1e-4°.
+- **Singita** (sol 2018) has no report yet, so it uses the rover localization on or before sol 2018.
+- **Excluded:** Roubion, the failed first attempt whose tube holds atmosphere only.
+- **Planning area:** 14 of the 23 sites (including the two curated ones) lie inside it and can be routed to. The other 9 (crater-rim campaign) are shown as context with `in_planning_area: false`.
+
+## Context layers
+
+- **Whole-mosaic context image:** `context_ortho.jpg` is the full USGS CTX orthomosaic (77.16-77.70°E, 18.21-18.72°N), block-averaged from 6 m to 12 m for display. It is not used for routing.
+- **Global basemap:** NASA Solar System Treks (Mars Trek) WMTS, Viking MDIM 2.1 colour mosaic at 232 m/px, equirectangular tiles loaded live from https://trek.nasa.gov/mars/. Context only.
+
 ## Rover photographs
 
 | Photo | Site | Geolocation basis |

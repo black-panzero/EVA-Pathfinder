@@ -47,6 +47,9 @@ def main() -> None:
 
     c = TestClient(app)
     sa = c.get("/api/v1/study-area").json()
+    if sa.get("context"):
+        shutil.copy2(r.dir / sa["context"]["file"], OUT / "layers" / sa["context"]["file"])
+        sa["context"]["image_url"] = f"static/layers/{sa['context']['file']}"
     for layer in sa["layers"]:
         layer["image_url"] = f"static/layers/{layer['layer_id']}.png"
     obs = c.get("/api/v1/observations").json()

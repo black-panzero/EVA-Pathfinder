@@ -112,8 +112,14 @@ code { color: var(--text-2); }
 .leaflet-tooltip::before { display: none; }
 .pin-hab span, .pin-site span, .pin-crew span, .pin-cam { display: grid; place-content: center; width: 100%; height: 100%; border-radius: 50%; font: 600 11px var(--mono); }
 .pin-hab span { background: var(--text); color: var(--bg); box-shadow: 0 0 0 2px var(--bg); }
-.pin-site span { background: var(--bg); color: var(--text); border: 2px solid var(--text-2); }
+.pin-site span { background: rgba(20, 20, 21, 0.35); color: var(--text); border: 2px solid #ededed; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55); }
 .pin-site.on span { border-color: var(--text); background: var(--text); color: var(--bg); }
+.pin-site.out span { border: 1.5px dashed #ededed; background: rgba(20, 20, 21, 0.25); }
+.lg-site.out { border-style: dashed; border-width: 1.5px; width: 10px; height: 10px; }
+.lg-area { width: 14px; height: 10px; border: 1px dashed var(--text); flex: none; }
+.ov-context { filter: brightness(0.92); }
+.tiles-global { filter: saturate(0.85) brightness(0.9); }
+.card.sel { border-color: var(--text-2); }
 .pin-crew span { background: var(--pos); color: #06231a; box-shadow: 0 0 0 2px var(--bg); }
 .pin-cam { background: var(--card); color: var(--obs); border: 1px solid var(--obs); border-radius: 6px; }
 .ov-geology, .ov-slope, .ov-elevation { image-rendering: pixelated; }
@@ -346,3 +352,9 @@ svg .band { fill: rgba(255, 122, 69, 0.12); }
   .top-actions .btn:not(.ghost) span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+.place-label span { display: inline-block; white-space: nowrap; font: 500 12px var(--sans); color: var(--text); background: rgba(20, 20, 21, 0.85); border: 1px solid var(--line-2); border-radius: 6px; padding: 2px 8px; }
+
+.skip-link { position: fixed; left: -9999px; top: 8px; z-index: 1000; background: var(--text); color: var(--bg); padding: 6px 12px; border-radius: 6px; font-weight: 500; text-decoration: none; }
+.skip-link:focus { left: 50%; transform: translateX(-50%); }
+.panel { position: relative; }

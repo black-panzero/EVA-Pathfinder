@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Camera, Footprints, Maximize2, X } from "lucide-react";
+import { Camera, Footprints, X } from "lucide-react";
 import type { GeologyUnit, Photo, ScienceSite, StudyArea, XY } from "../api/types";
-import { xyToLonLat } from "../features/format";
 
 export type MapView = "ortho" | "elevation" | "slope" | "geology";
 export type PickMode = "none" | "habitat" | "zone";
@@ -28,6 +27,7 @@ export interface MarsMapProps {
   onPick: (mode: PickMode, p: XY) => void;
   onCancelPick: () => void;
   onSelectPhoto: (id: string) => void;
+  onSelectSite: (id: string) => void;
   focus: { x: number; y: number; n: number } | null;
   /** Fit the view to these points whenever fitKey changes (e.g. after routes are computed). */
   fitPoints: [number, number][];
@@ -36,13 +36,26 @@ export interface MarsMapProps {
 
 const OVERLAY_OPACITY: Record<Exclude<MapView, "ortho">, number> = { elevation: 0.7, slope: 0.62, geology: 0.5 };
 const VIEWS: { id: MapView; label: string }[] = [{ id: "ortho", label: "Photo" }, { id: "elevation", label: "Elevation" }, { id: "slope", label: "Slope" }, { id: "geology", label: "Geology" }];
-const ll = (x: number, y: number) => L.latLng(y, x);
+const DEG = 180 / Math.PI;
 
-function ellipse(cx: number, cy: number, rGround: number, k: number): L.LatLng[] {
+/** Planning-frame metres <-> planetocentric lon/lat on the Mars 2000 sphere. The source CRS is
+ *  equirectangular with true scale at the equator, so this is an exact linear unit conversion. */
+function frame(sa: StudyArea) {
+  const R = sa.crs.sphere_radius_m;
+  const lon = (x: number) => ((sa.grid.origin_easting_m + x) / R) * DEG;
+  const lat = (y: number) => ((sa.grid.origin_northing_bottom_m + y) / R) * DEG;
+  return {
+    ll: (x: number, y: number) => L.latLng(lat(y), lon(x)),
+    xy: (p: L.LatLng): XY => ({ x_m: (p.lng / DEG) * R - sa.grid.origin_easting_m, y_m: (p.lat / DEG) * R - sa.grid.origin_northing_bottom_m }),
+    R,
+  };
+}
+
+function ellipse(cx: number, cy: number, rGround: number, k: number): [number, number][] {
   const rx = rGround / k; // ground radius -> projected: E-W stretched by 1/cos(lat)
   return Array.from({ length: 64 }, (_, i) => {
     const t = (i / 64) * Math.PI * 2;
-    return ll(cx + rx * Math.cos(t), cy + rGround * Math.sin(t));
+    return [cx + rx * Math.cos(t), cy + rGround * Math.sin(t)] as [number, number];
   });
 }
 
@@ -52,28 +65,26 @@ function niceNumber(v: number): number {
   return (d >= 5 ? 5 : d >= 2 ? 2 : 1) * p;
 }
 
-function Legend({ view, units, routes }: { view: MapView; units: GeologyUnit[]; routes: MapRoute[] }) {
+function Legend({ view, units, routes, hasOutside }: { view: MapView; units: GeologyUnit[]; routes: MapRoute[]; hasOutside: boolean }) {
   return (
     <div className="map-card legend" aria-label="Map legend">
       {routes.map((r) => (
         <div key={r.id} className="lg-row"><i className={`lg-line ${r.dashed ? "dashed" : ""}`} style={{ borderColor: r.color }} />{r.label}</div>
       ))}
       <div className="lg-row"><i className="lg-hab" />Habitat (simulated)</div>
-      <div className="lg-row"><i className="lg-site" />Science site</div>
+      <div className="lg-row"><i className="lg-site" />Science site in planning area</div>
+      {hasOutside && <div className="lg-row"><i className="lg-site out" />Sample site elsewhere (context)</div>}
+      <div className="lg-row"><i className="lg-area" />Planning area (routing)</div>
       {view === "slope" && (
-        <div className="lg-ramp">
-          <span>Slope</span><i className="ramp slope-ramp" /><span className="ramp-l num"><span>0°</span><span>15°</span><span>30°+</span></span>
-        </div>
+        <div className="lg-ramp"><span>Slope, planning area</span><i className="ramp slope-ramp" /><span className="ramp-l num"><span>0°</span><span>15°</span><span>30°+</span></span></div>
       )}
       {view === "elevation" && (
-        <div className="lg-ramp">
-          <span>Elevation</span><i className="ramp elev-ramp" /><span className="ramp-l num"><span>−2611 m</span><span>−2356 m</span></span>
-        </div>
+        <div className="lg-ramp"><span>Elevation, planning area</span><i className="ramp elev-ramp" /><span className="ramp-l num"><span>−2611 m</span><span>−2356 m</span></span></div>
       )}
       {view === "geology" && (
         <div className="lg-units">
           {units.map((u) => <div key={u.symbol} className="lg-row"><i className="lg-sq" style={{ background: u.color }} /><span className="mono">{u.symbol}</span>{u.name.replace(" unit", "")}</div>)}
-          <p>Regional context, edges ±100-200 m</p>
+          <p>Planning area only; edges ±100-200 m</p>
         </div>
       )}
     </div>
@@ -86,50 +97,76 @@ export function MarsMap(props: MarsMapProps) {
   const overlays = useRef<Partial<Record<string, L.ImageOverlay>>>({});
   const dyn = useRef<L.LayerGroup | null>(null);
   const traverse = useRef<L.LayerGroup | null>(null);
+  const firstFit = useRef(true);
+  const introTimer = useRef<number | undefined>(undefined);
   const propsRef = useRef(props);
   propsRef.current = props;
   const [cursor, setCursor] = useState("");
   const [scale, setScale] = useState<{ px: number; label: string }>({ px: 80, label: "" });
+  const [zoom, setZoom] = useState(1);
 
   const { sa } = props;
+  const f = frame(sa);
   const [W, H] = sa.extent_xy_m;
   const k = sa.scale.east_west_ground_m_per_projected_m;
-  const bounds = L.latLngBounds(ll(0, 0), ll(W, H));
+  const planBounds = L.latLngBounds(f.ll(0, 0), f.ll(W, H));
+  const ctx = sa.context;
+  const ctxBounds = ctx ? L.latLngBounds([ctx.lat_range_deg[0], ctx.lon_range_deg[0]], [ctx.lat_range_deg[1], ctx.lon_range_deg[1]]) : planBounds.pad(1.5);
+  const inPlan = (p: XY) => p.x_m >= 0 && p.y_m >= 0 && p.x_m < W && p.y_m < H;
+
+  const goTo = (target: "mars" | "jezero" | "plan") => {
+    const m = map.current;
+    if (!m) return;
+    window.clearTimeout(introTimer.current);
+    m.stop();
+    if (target === "mars") m.flyToBounds(L.latLngBounds([-75, -180], [75, 180]), { duration: 1.2 });
+    if (target === "jezero") m.flyToBounds(ctxBounds, { padding: [24, 24], duration: 1.2 });
+    if (target === "plan") m.flyToBounds(planBounds, { padding: [24, 24], duration: 1.2 });
+  };
 
   useEffect(() => {
     if (!el.current || map.current) return;
-    const m = L.map(el.current, { crs: L.CRS.Simple, minZoom: -4, maxZoom: 3, zoomSnap: 0.25, zoomControl: false, attributionControl: true, keyboard: true });
+    const m = L.map(el.current, { crs: L.CRS.EPSG4326, minZoom: 0, maxZoom: 15, zoomSnap: 0.25, zoomControl: false, attributionControl: true, keyboard: true, worldCopyJump: false });
     L.control.zoom({ position: "bottomright" }).addTo(m);
-    m.fitBounds(bounds, { padding: [8, 8] });
-    m.setMaxBounds(bounds.pad(0.3));
     m.attributionControl.setPrefix(false);
-    m.attributionControl.addAttribution("USGS Astrogeology · NASA/JPL-Caltech/MSSS · USGS SIM 3464");
-    for (const layer of sa.layers) overlays.current[layer.layer_id] = L.imageOverlay(layer.image_url, bounds, { alt: layer.title, className: `ov-${layer.layer_id}` });
+    if (sa.global_basemap) {
+      L.tileLayer(sa.global_basemap.url_template, {
+        maxNativeZoom: sa.global_basemap.max_native_zoom, maxZoom: 15, minZoom: 0, noWrap: true, bounds: L.latLngBounds([-90, -180], [90, 180]),
+        attribution: sa.global_basemap.attribution, className: "tiles-global",
+      }).addTo(m);
+    }
+    if (ctx) L.imageOverlay(ctx.image_url, ctxBounds, { alt: "Jezero CTX orthomosaic (context)", className: "ov-context" }).addTo(m);
+    m.attributionControl.addAttribution("CTX: USGS Astrogeology · NASA/JPL-Caltech/MSSS · Geology: USGS SIM 3464");
+    for (const layer of sa.layers) overlays.current[layer.layer_id] = L.imageOverlay(layer.image_url, planBounds, { alt: layer.title, className: `ov-${layer.layer_id}` });
     overlays.current.ortho?.addTo(m);
+    L.rectangle(planBounds, { color: "#ededed", weight: 1, dashArray: "4 4", fill: false, interactive: false }).addTo(m);
+    m.fitBounds(L.latLngBounds([-75, -180], [75, 180]), { animate: false });
+    const label = L.marker(planBounds.getCenter(), { icon: L.divIcon({ className: "place-label", html: "<span>Jezero Crater</span>", iconSize: [120, 20], iconAnchor: [-14, 10] }), interactive: false, keyboard: false });
     traverse.current = L.layerGroup();
     dyn.current = L.layerGroup().addTo(m);
-    const updateScale = () => {
-      const ground = (80 / Math.pow(2, m.getZoom())) * k;
+    const update = () => {
+      const z = m.getZoom();
+      setZoom(z);
+      if (z < 8.5) { if (!m.hasLayer(label)) label.addTo(m); } else if (m.hasLayer(label)) m.removeLayer(label);
+      const lat = m.getCenter().lat;
+      const groundPerPx = (360 / (512 * Math.pow(2, z))) / DEG * f.R * Math.cos(lat / DEG);
+      const ground = groundPerPx * 80;
       const nice = niceNumber(ground);
-      setScale({ px: (nice / ground) * 80, label: nice >= 1000 ? `${nice / 1000} km` : `${nice} m` });
+      setScale({ px: (nice / ground) * 80, label: nice >= 1000 ? `${(nice / 1000).toLocaleString()} km` : `${nice} m` });
     };
-    m.on("zoomend", updateScale);
-    updateScale();
-    m.on("mousemove", (e: L.LeafletMouseEvent) => {
-      const x = e.latlng.lng, y = e.latlng.lat;
-      if (x < 0 || y < 0 || x > W || y > H) return setCursor("");
-      const [lon, lat] = xyToLonLat(sa, x, y);
-      setCursor(`${lat.toFixed(4)}°N ${lon.toFixed(4)}°E`);
-    });
+    m.on("zoomend moveend", update);
+    update();
+    m.on("mousemove", (e: L.LeafletMouseEvent) => setCursor(`${e.latlng.lat.toFixed(4)}°N ${e.latlng.lng.toFixed(4)}°E`));
     m.on("click", (e: L.LeafletMouseEvent) => {
       const mode = propsRef.current.pickMode;
-      const x = e.latlng.lng, y = e.latlng.lat;
-      if (mode !== "none" && x >= 0 && y >= 0 && x < W && y < H) propsRef.current.onPick(mode, { x_m: x, y_m: y });
+      if (mode === "none") return;
+      const p = f.xy(e.latlng);
+      if (inPlan(p)) propsRef.current.onPick(mode, p);
     });
     const ro = new ResizeObserver(() => m.invalidateSize());
     ro.observe(el.current);
     map.current = m;
-    return () => { ro.disconnect(); m.remove(); map.current = null; };
+    return () => { window.clearTimeout(introTimer.current); ro.disconnect(); m.stop(); m.remove(); map.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -149,10 +186,13 @@ export function MarsMap(props: MarsMapProps) {
     if (!m || !g) return;
     g.clearLayers();
     if (props.showTraverse) {
-      L.polyline(sa.rover_traverse.points.map((p) => ll(p.x_m, p.y_m)), { color: "#ededed", weight: 1.5, opacity: 0.7, dashArray: "1 5", lineCap: "round" })
-        .bindTooltip("Perseverance's actual path").addTo(g);
+      const pts = sa.rover_traverse.points.map((p) => (p.lat_deg !== undefined && p.lon_deg !== undefined ? L.latLng(p.lat_deg, p.lon_deg) : f.ll(p.x_m, p.y_m)));
+      const last = sa.rover_traverse.points[sa.rover_traverse.points.length - 1];
+      L.polyline(pts, { color: "#ededed", weight: 1.5, opacity: 0.75, dashArray: "1 5", lineCap: "round" })
+        .bindTooltip(`Perseverance's actual path, sols ${sa.rover_traverse.points[0]?.sol}-${last?.sol} (NASA localizations)`, { sticky: true }).addTo(g);
       g.addTo(m);
     } else m.removeLayer(g);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showTraverse, sa]);
 
   useEffect(() => {
@@ -160,48 +200,58 @@ export function MarsMap(props: MarsMapProps) {
     if (!g) return;
     g.clearLayers();
     for (const r of props.routes) {
-      const pts = r.points.map(([x, y]) => ll(x, y));
+      const pts = r.points.map(([x, y]) => f.ll(x, y));
       L.polyline(pts, { color: "#0b0b0c", weight: (r.weight ?? 3) + 3, opacity: 0.6 }).addTo(g);
       L.polyline(pts, { color: r.color, weight: r.weight ?? 3, dashArray: r.dashed ? "6 6" : undefined, lineJoin: "round" }).bindTooltip(r.label, { sticky: true }).addTo(g);
     }
     if (props.zone) {
       const [cx, cy] = props.zone.center;
-      L.polygon(ellipse(cx, cy, props.zone.radius_m, k), { color: "#e5484d", weight: 1.5, fillColor: "#e5484d", fillOpacity: 0.22 })
+      L.polygon(ellipse(cx, cy, props.zone.radius_m, k).map(([x, y]) => f.ll(x, y)), { color: "#e5484d", weight: 1.5, fillColor: "#e5484d", fillOpacity: 0.22 })
         .bindTooltip(`Blocked zone (simulated), ${props.zone.radius_m} m radius`).addTo(g);
     }
     props.sites.forEach((s) => {
       const order = props.stops.findIndex((st) => st.id === s.id) + 1;
-      L.marker(ll(s.x_m, s.y_m), {
-        icon: L.divIcon({ className: `pin-site ${order ? "on" : ""}`, html: `<span>${order || ""}</span>`, iconSize: [22, 22] }),
-        title: s.name, keyboard: true, zIndexOffset: 500,
-      }).bindTooltip(`${s.name}${order ? ` · stop ${order}` : " · not selected"}`).addTo(g);
+      const inside = s.in_planning_area !== false;
+      L.marker(f.ll(s.x_m, s.y_m), {
+        icon: L.divIcon({ className: `pin-site ${order ? "on" : ""} ${inside ? "" : "out"}`, html: `<span>${order || ""}</span>`, iconSize: order ? [22, 22] : inside ? [16, 16] : [14, 14] }),
+        title: s.name, keyboard: true, zIndexOffset: inside ? 500 : 300,
+      }).on("click", () => propsRef.current.onSelectSite(s.id))
+        .bindTooltip(`${s.name}${s.sample_sol ? ` · sampled sol ${s.sample_sol}` : ""}${!inside ? " · outside planning area (context)" : order ? ` · stop ${order}` : " · click for details"}`).addTo(g);
     });
-    L.marker(ll(props.habitat.x_m, props.habitat.y_m), {
+    L.marker(f.ll(props.habitat.x_m, props.habitat.y_m), {
       icon: L.divIcon({ className: "pin-hab", html: "<span>H</span>", iconSize: [26, 26] }), title: "Habitat (simulated)", keyboard: true, zIndexOffset: 600,
     }).bindTooltip("Habitat (simulated)").addTo(g);
     if (props.showPhotos) {
       for (const p of props.photos) {
-        L.marker(ll(p.geolocation.x_m, p.geolocation.y_m), {
+        L.marker(f.ll(p.geolocation.x_m, p.geolocation.y_m), {
           icon: L.divIcon({ className: "pin-cam", html: `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`, iconSize: [20, 20] }),
           title: `Rover photo, sol ${p.sol}`, keyboard: true,
         }).on("click", () => propsRef.current.onSelectPhoto(p.photo_id)).bindTooltip(`Rover photo · sol ${p.sol} · click to view`).addTo(g);
       }
     }
     if (props.crew) {
-      L.marker(ll(props.crew.x_m, props.crew.y_m), { icon: L.divIcon({ className: "pin-crew", html: "<span>C</span>", iconSize: [24, 24] }), title: "Crew (simulated)", zIndexOffset: 700 })
+      L.marker(f.ll(props.crew.x_m, props.crew.y_m), { icon: L.divIcon({ className: "pin-crew", html: "<span>C</span>", iconSize: [24, 24] }), title: "Crew (simulated)", zIndexOffset: 700 })
         .bindTooltip("Crew position (simulated)").addTo(g);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.routes, props.zone, props.sites, props.stops, props.habitat, props.photos, props.showPhotos, props.crew, k]);
 
+  // First fit: fly in from the whole planet to the planned route. Later fits jump without animation.
   useEffect(() => {
     const m = map.current;
     if (!m || props.fitPoints.length < 2) return;
-    m.fitBounds(L.latLngBounds(props.fitPoints.map(([x, y]) => ll(x, y))).pad(0.25), { animate: false });
+    const b = L.latLngBounds(props.fitPoints.map(([x, y]) => f.ll(x, y))).pad(0.25);
+    window.clearTimeout(introTimer.current);
+    if (firstFit.current) {
+      firstFit.current = false;
+      introTimer.current = window.setTimeout(() => { if (map.current === m) { m.stop(); m.flyToBounds(b, { duration: 2.4 }); } }, 400);
+    } else { m.stop(); m.fitBounds(b, { animate: false }); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.fitKey]);
 
   useEffect(() => {
-    if (props.focus && map.current) map.current.flyTo(ll(props.focus.x, props.focus.y), 0, { duration: 0.5 });
+    if (props.focus && map.current) map.current.stop(), map.current.flyTo(f.ll(props.focus.x, props.focus.y), Math.max(map.current.getZoom(), 12), { duration: 0.8 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.focus]);
 
   useEffect(() => {
@@ -211,11 +261,17 @@ export function MarsMap(props: MarsMapProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [props.pickMode]);
 
+  const level = zoom < 6 ? "mars" : zoom < 10.5 ? "jezero" : "plan";
   return (
     <div className="map-wrap">
-      <div ref={el} className="map" role="application" aria-label="Map of the Jezero Crater study area. Results are also listed as text in the panel." tabIndex={0} />
+      <div ref={el} className="map" role="application" aria-label="Map of Mars zooming into Jezero Crater. Results are also listed as text in the panel." tabIndex={0} />
       <div className="map-top">
-        <div className="map-card seg" role="radiogroup" aria-label="Map view">
+        <div className="map-card seg" role="radiogroup" aria-label="Zoom to">
+          {([["mars", "Mars"], ["jezero", "Jezero"], ["plan", "Planning area"]] as const).map(([id, label]) => (
+            <button key={id} type="button" role="radio" aria-checked={level === id} className={level === id ? "on" : ""} onClick={() => goTo(id)}>{label}</button>
+          ))}
+        </div>
+        <div className="map-card seg" role="radiogroup" aria-label="Detail layer (planning area)">
           {VIEWS.map((v) => <button key={v.id} type="button" role="radio" aria-checked={props.view === v.id} className={props.view === v.id ? "on" : ""} onClick={() => props.setView(v.id)}>{v.label}</button>)}
         </div>
         <div className="map-card seg toggles">
@@ -225,18 +281,15 @@ export function MarsMap(props: MarsMapProps) {
           <button type="button" aria-pressed={props.showPhotos} className={props.showPhotos ? "on" : ""} onClick={() => props.setShowPhotos(!props.showPhotos)} title="Show rover photo locations">
             <Camera size={14} strokeWidth={1.75} aria-hidden="true" />Photos
           </button>
-          <button type="button" onClick={() => map.current?.flyToBounds(bounds, { padding: [8, 8], duration: 0.4 })} title="Fit the whole study area" aria-label="Fit the whole study area">
-            <Maximize2 size={14} strokeWidth={1.75} aria-hidden="true" />
-          </button>
         </div>
       </div>
       {props.pickMode !== "none" && (
         <div className="pick-banner" role="status">
-          {props.pickMode === "habitat" ? "Click the map to place the habitat" : "Click the map to centre the blocked zone"}
+          {props.pickMode === "habitat" ? "Click inside the dashed planning area to place the habitat" : "Click inside the dashed planning area to centre the blocked zone"}
           <button type="button" className="icon-btn" onClick={props.onCancelPick} aria-label="Cancel"><X size={14} strokeWidth={1.75} /></button>
         </div>
       )}
-      <Legend view={props.view} units={sa.geology_units?.units ?? []} routes={props.routes} />
+      <Legend view={props.view} units={sa.geology_units?.units ?? []} routes={props.routes} hasOutside={props.sites.some((s) => s.in_planning_area === false)} />
       <div className="map-foot">
         <span className="scalebar"><i style={{ width: `${scale.px}px` }} />{scale.label}</span>
         <span className="mono">N ↑</span>

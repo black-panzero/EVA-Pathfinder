@@ -107,11 +107,12 @@ def main() -> int:
         kb.keyboard.press("Enter")  # focus starts on "Start planning"
         kb.wait_for_selector(".rail-n.done", timeout=120000)
         reached = False
-        for _ in range(80):
+        for _ in range(40):  # Tab to the "Skip to step actions" link, then Enter moves focus to the primary action
             kb.keyboard.press("Tab")
-            if kb.evaluate("document.activeElement?.textContent?.includes('See routes')"):
-                reached = True
+            if kb.evaluate("document.activeElement?.textContent?.includes('Skip to step actions')"):
+                kb.keyboard.press("Enter")
                 break
+        reached = bool(kb.evaluate("document.activeElement?.textContent?.includes('See routes')"))
         if reached:
             kb.keyboard.press("Enter")
             kb.wait_for_selector(".route-card", timeout=10000)

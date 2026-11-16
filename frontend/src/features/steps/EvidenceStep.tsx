@@ -23,11 +23,16 @@ function MedaChart({ s }: { s: MedaSeries }) {
   );
 }
 
-export function EvidenceStep({ sa, sites, obs, ds, plan, selectedPhoto }: {
-  sa: StudyArea; sites: ScienceSite[]; obs: Observations | null; ds: DatasetsResponse | null; plan: EvaluateResponse | null; selectedPhoto: string | null;
+export function EvidenceStep({ sa, sites, obs, ds, plan, selectedPhoto, selectedSite }: {
+  sa: StudyArea; sites: ScienceSite[]; obs: Observations | null; ds: DatasetsResponse | null; plan: EvaluateResponse | null; selectedPhoto: string | null; selectedSite?: { id: string; n: number } | null;
 }) {
   const [tab, setTab] = useState<Tab>("science");
   useEffect(() => { if (selectedPhoto) setTab("photos"); }, [selectedPhoto]);
+  useEffect(() => {
+    if (!selectedSite) return;
+    setTab("science");
+    setTimeout(() => document.getElementById(`site-${selectedSite.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+  }, [selectedSite]);
   const tabs: [Tab, string][] = [["science", "Science"], ["photos", "Rover photos"], ["weather", "Weather history"], ["sources", "Data sources"], ["labels", "Labels"]];
   const ev = ds?.alignment.dem_vs_rover_elevation;
   return (
@@ -42,8 +47,9 @@ export function EvidenceStep({ sa, sites, obs, ds, plan, selectedPhoto }: {
         {tab === "science" && (
           <>
             {sites.map((s) => (
-              <article key={s.id} className="card">
-                <h3>{s.name} <Prov level={s.evidence_level} /></h3>
+              <article key={s.id} id={`site-${s.id}`} className={`card ${selectedSite?.id === s.id ? "sel" : ""}`}>
+                <h3>{s.name} <Prov level={s.evidence_level} />{s.in_planning_area === false && <span className="meta">outside planning area</span>}</h3>
+                {(s.samples?.length || s.sample_sol) && <p className="m num">{s.samples?.length ? `Samples: ${s.samples.join(", ")}` : ""}{s.sample_sol ? ` · collected sol ${s.sample_sol}` : ""}{s.campaign ? ` · ${s.campaign}` : ""}</p>}
                 <p>{s.science_summary}</p>
                 {s.mapped_geologic_unit && <p className="m">Mapped rock unit: <span className="mono">{s.mapped_geologic_unit.symbol}</span> {s.mapped_geologic_unit.name}, regional context</p>}
                 <p className="m num">{s.lat_deg.toFixed(5)}°N {s.lon_deg.toFixed(5)}°E · rover site {s.site}, drive {s.drive}, sol {s.sol}</p>

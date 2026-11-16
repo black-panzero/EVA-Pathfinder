@@ -56,6 +56,7 @@ export default function App() {
   const [replanBusy, setReplanBusy] = useState(false);
   const [replanErr, setReplanErr] = useState<string | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
+  const [siteSel, setSiteSel] = useState<{ id: string; n: number } | null>(null);
   const [guide, setGuide] = useState(!seenGuide());
   const [focus, setFocus] = useState<{ x: number; y: number; n: number } | null>(null);
 
@@ -167,6 +168,7 @@ export default function App() {
 
   return (
     <div className="shell">
+      <a href="#step-actions" className="skip-link" onClick={(e) => { e.preventDefault(); document.getElementById("step-next")?.focus(); }}>Skip to step actions</a>
       <header className="topbar">
         <div className="brand"><Mark /><span>EVA Pathfinder</span></div>
         <div className="crumb"><span>Jezero Crater, Mars</span><span className="m">Operation Delta Return · simulated mission</span></div>
@@ -204,8 +206,8 @@ export default function App() {
           routes={mapRoutes} habitat={req.habitat} stops={req.stops.map((s) => ({ id: s.stop_id, name: s.name, point: s.point }))} sites={sites} photos={obs?.photos ?? []}
           zone={step === 4 ? (replan ? { center: replan.event.center_xy_m, radius_m: replan.event.radius_m } : cont.center ? { center: [cont.center.x_m, cont.center.y_m], radius_m: cont.radius_m } : null) : null}
           crew={step === 4 && replan ? { x_m: replan.current_position.x_m, y_m: replan.current_position.y_m } : null}
-          pickMode={pick} onPick={onPick} onCancelPick={() => setPick("none")} onSelectPhoto={(id) => { setPhoto(id); setStep(5); }} focus={focus}
-          fitPoints={[...poly(plans.terrain), ...poly(plans.shortest), [req.habitat.x_m, req.habitat.y_m], ...sites.map((s) => [s.x_m, s.y_m] as [number, number])]} fitKey={planKey} />
+          pickMode={pick} onPick={onPick} onCancelPick={() => setPick("none")} onSelectPhoto={(id) => { setPhoto(id); setStep(5); }} onSelectSite={(id) => { setSiteSel({ id, n: Date.now() }); setStep(5); }} focus={focus}
+          fitPoints={[...poly(plans.terrain), ...poly(plans.shortest), [req.habitat.x_m, req.habitat.y_m], ...sites.filter((s) => s.in_planning_area !== false).map((s) => [s.x_m, s.y_m] as [number, number])]} fitKey={planKey} />
       </main>
 
       <aside className="panel" aria-label={`Step ${step}`}>
@@ -218,13 +220,13 @@ export default function App() {
           {step === 3 && <FeasibilityStep a={a} names={Object.fromEntries(sites.map((s) => [s.id, s.name]))} />}
           {step === 4 && <ContingencyStep state={cont} setState={setCont} planMinutes={a?.totals.minutes ?? null} onRun={runScenario} onPickZone={() => setPick(pick === "zone" ? "none" : "zone")}
             picking={pick === "zone"} result={replan} busy={replanBusy} error={replanErr} />}
-          {step === 5 && <EvidenceStep sa={sa} sites={sites} obs={obs} ds={ds} plan={chosenPlan} selectedPhoto={photo} />}
+          {step === 5 && <EvidenceStep sa={sa} sites={sites} obs={obs} ds={ds} plan={chosenPlan} selectedPhoto={photo} selectedSite={siteSel} />}
         </div>
-        <footer className="panel-foot">
+        <footer className="panel-foot" id="step-actions">
           {stale && step > 1 && <span className="m">Inputs changed. <button type="button" className="link" onClick={() => evaluate(req)}>Recompute</button></span>}
           <button type="button" className="btn ghost" onClick={() => setStep((s) => (Math.max(1, s - 1) as StepId))} disabled={step === 1}><ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />Back</button>
           {step < 5 && (
-            <button type="button" className="btn primary" onClick={next} disabled={busy}>
+            <button id="step-next" type="button" className="btn primary" onClick={next} disabled={busy}>
               {step === 1 ? (stale || !chosenPlan ? "Compute routes" : "See routes") : `Next: ${STEPS[step].title}`}<ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
             </button>
           )}

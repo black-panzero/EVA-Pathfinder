@@ -148,8 +148,12 @@ def test_4_science_site_contract_fields(client):
         assert {"id", "name", "x_m", "y_m", "citations"} <= set(s)  # legacy keys kept
         assert s["objective"] and s["location_status"] in ("verified", "contextual") and s["notes"]
         assert s["source_urls"] and all(u.startswith("https://") for u in s["source_urls"])
-        assert s["map_point"] == {"x_m": s["x_m"], "y_m": s["y_m"], "crs_id": crs}
-        assert [s["grid_cell"]["row"], s["grid_cell"]["col"]] == s["cell"]
+        if s["in_planning_area"]:
+            assert s["map_point"] == {"x_m": s["x_m"], "y_m": s["y_m"], "crs_id": crs}
+            assert [s["grid_cell"]["row"], s["grid_cell"]["col"]] == s["cell"]
+        else:  # off the routing grid: 08 allows map_point null; position still given as lon/lat
+            assert s["map_point"] is None and s["grid_cell"] is None and s["location_status"] == "contextual"
+            assert -180 <= s["lon_deg_180"] <= 180
 
 
 # ------------------------------------------------------------------------------- 5/6. compare

@@ -10,7 +10,7 @@ Return-aware Marswalk planning on **real Jezero Crater terrain** (NASA Space App
 
 ## What it does
 
-- **Map.** An 8.1 × 4.5 km study area from the western Jezero floor to the delta front. Layers: the USGS Mars 2020 CTX orthomosaic (6 m), the CTX DTM (20 m) with elevation, slope and hillshade, the USGS SIM 3464 geologic units, the Perseverance traverse, and geolocated Navcam photos.
+- **Map.** Zooms from the whole of Mars (NASA Mars Trek Viking colour mosaic) into the full 32 × 30 km USGS CTX mosaic of Jezero, then into an 8.1 × 4.5 km planning area where routes are computed. The planning area has detail layers (6 m orthomosaic, 20 m DTM elevation, slope, hillshade, USGS SIM 3464 geology). The map also shows Perseverance's full path (554 end-of-drive positions to sol 2022), geolocated Navcam photos, and **23 science sites**: every Perseverance rock and regolith sample site to sol 2018, placed from NASA's Mars 2020 Initial Reports. 14 of the sites lie inside the planning area and can be chosen as stops.
 - **Pathfinder.** 8-neighbour A* in ground metres with a hard slope limit, no-data exclusion and no corner cutting. It computes a *shortest feasible* and a *terrain-aware* route and reports length, gain and loss, maximum and mean slope, unknown fraction and an elevation profile.
 - **Guardian.** Round-trip feasibility (`FEASIBLE` / `INFEASIBLE` / `UNKNOWN` with reason codes) against an illustrative time and consumable budget with a reserve.
 - **Contingency Lab.** Scrub mission progress and inject a simulated blocked zone. The engine replans from the crew's current position with the resources already spent, and reports "no feasible return" when that is the truth.
@@ -39,6 +39,8 @@ Requirements: Python ≥ 3.11 with GDAL wheels (installed with rasterio), Node �
 | Geology | USGS SIM 3464 (Sun & Stack 2020) | PARTIAL: documented 100-200 m offsets, shown as regional context |
 | Rover positions | NASA Mars 2020 waypoint service | AVAILABLE_VERIFIED; DEM matches rover elevations with a median 1.55 m absolute difference over 252 points |
 | Rover photos | NASA Mars 2020 raw Navcam (sols 502, 684) | Geolocated by site/drive |
+| Sample sites | NASA Mars 2020 Initial Reports (PDS sample dossier), NASA sample pages | 21 sample sites + 2 curated sites; coring sols, report coordinates |
+| Global basemap | NASA Mars Trek, Viking MDIM 2.1 colour mosaic (232 m) | Context only; loaded live from trek.nasa.gov |
 | Atmosphere (history) | PDS MEDA derived data, sol 684 (pressure, irradiance) | Historical only |
 
 Details: [`docs/DATA_PROVENANCE.md`](docs/DATA_PROVENANCE.md), [`docs/DATA_INSPECTION.md`](docs/DATA_INSPECTION.md).

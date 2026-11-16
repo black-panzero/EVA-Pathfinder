@@ -8,6 +8,8 @@ The working / not-implemented matrix required by `05_IMPLEMENTATION_PLAN.md` §3
 | Data | USGS SIM 3464 geology reprojected and rasterized (regional context) | Working (partial alignment, disclosed) | `geology_units.json`, UI legend caveat |
 | Data | Science sites resolved from Perseverance site/drive records | Working | `config/science_sites.json`, `science_sites.json` |
 | Data | Geolocated Navcam photos (sols 502, 684) | Working | `photos.json` |
+| Data | 23 science sites incl. 21 Perseverance sample sites (NASA Initial Reports coordinates, coring sols); 14 routable | Working | `science_sites.json`, test D-02 |
+| Map | Whole Mars (NASA Mars Trek) → full Jezero CTX mosaic → planning area, full rover path | Working | browser smoke test |
 | Data | MEDA sol 684 pressure and irradiance history | Working | `meda.json` |
 | Terrain | Latitude-correct slope in ground metres; NaN-safe | Working | `test_terrain.py`, T-01..T-07 |
 | Routing | 8-neighbour A*, no corner cutting, hard slope and no-data limits; shortest vs terrain-aware | Working | `test_navigation.py`, R-01..R-08 |

@@ -18,6 +18,16 @@ from .schemas import MissionBody, ReplanBody, ReportRequest, RouteCompareBody
 from .translate_v08 import default_mission_request
 
 API_VERSION = "v1"
+# Whole-planet basemap: NASA Solar System Treks (Mars Trek) WMTS, equirectangular (plate carree) 2x1 tiles at level 0.
+GLOBAL_BASEMAP = {
+    "title": "Viking MDIM 2.1 colour mosaic, 232 m/px (NASA Mars Trek)",
+    "url_template": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+    "max_native_zoom": 7,
+    "attribution": "NASA/JPL-Caltech/USGS, Viking MDIM 2.1 via NASA Mars Trek",
+    "source_url": "https://trek.nasa.gov/mars/",
+    "evidence_level": "NASA_OBSERVATION",
+    "note": "Context only; requires internet. Planning uses the USGS CTX data of the planning area.",
+}
 settings = load_settings()
 app = FastAPI(title="EVA Pathfinder / EVA Guardian API", version="1.0.0",
               description="Return-aware Marswalk planning on real Jezero Crater terrain. Research prototype: not certified for EVA navigation or life support.")
@@ -114,7 +124,19 @@ def study_area() -> dict:
             "habitat": r.science["habitat"], "layers": [{"layer_id": k, "title": v[1], "evidence_level": v[2], "image_url": f"/api/{API_VERSION}/layers/{k}/image", "bounds_xy_m": [[0, 0], list(g.extent_xy_m)]} for k, v in LAYER_FILES.items() if r.layer_path(k)],
             "rover_traverse": r.traverse, "geology_units": r.geology,
             "disclaimer": "Static historical orbital data. 20 m DEM cannot resolve rocks or human-scale hazards. Research prototype: not certified for EVA navigation or life support.",
-            "map_contract": contracts.map_contract(m, g)}
+            "map_contract": contracts.map_contract(m, g),
+            "context": ({**m["context"], "image_url": f"/api/{API_VERSION}/context/image"} if m.get("context") and (r.dir / m["context"]["file"]).exists() else None),
+            "global_basemap": GLOBAL_BASEMAP}
+
+
+@app.get(f"/api/{API_VERSION}/context/image")
+def context_image() -> FileResponse:
+    r = repo()
+    ctx = r.manifest.get("context")
+    p = (r.dir / ctx["file"]) if ctx else None
+    if not p or not p.exists():
+        raise HTTPException(404, "context image not prepared")
+    return FileResponse(p, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
 
 
 @app.get(f"/api/{API_VERSION}/layers/{{layer_id}}")
