@@ -1,9 +1,10 @@
 import { Check, Crosshair, Home, MapPin } from "lucide-react";
+import type { AreaInfo } from "../../api/client";
 import type { MissionRequest, ScienceSite } from "../../api/types";
 import { Disclosure, Prov, StepHeader, Stepper } from "../../components/ui";
 
-export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }: {
-  req: MissionRequest; setReq: (r: MissionRequest) => void; sites: ScienceSite[];
+export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus, otherAreas = [], onSelectArea, habitatNote }: {
+  req: MissionRequest; setReq: (r: MissionRequest) => void; sites: ScienceSite[]; otherAreas?: AreaInfo[]; onSelectArea?: (id: string) => void; habitatNote?: string;
   picking: boolean; onPickHabitat: () => void; onFocus: (x: number, y: number) => void;
 }) {
   const p = req.profile, b = req.budget;
@@ -32,7 +33,7 @@ export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }
             <Crosshair size={14} strokeWidth={1.75} aria-hidden="true" />{picking ? "Click the map" : "Move"}
           </button>
         </div>
-        <p className="note">Placed at Perseverance's first position after landing, a flat, well-documented spot. No habitat exists on Mars</p>
+        <p className="note">{habitatNote ?? "No habitat exists on Mars"}</p>
       </section>
 
       <section className="group">
@@ -58,7 +59,14 @@ export function PlanStep({ req, setReq, sites, picking, onPickHabitat, onFocus }
           })}
         </div>
         {sites.some((s) => s.in_planning_area === false) && (
-          <p className="note">{sites.filter((s) => s.in_planning_area === false).length} more Perseverance sample sites appear on the map as context. They lie outside the detailed planning area, so they can't be routed to yet</p>
+          <div className="callout">
+            {sites.filter((s) => s.in_planning_area === false).length} more Perseverance sample sites lie outside this planning area and appear on the map as context.
+            {otherAreas.length > 0 && onSelectArea && (
+              <div className="btn-row" style={{ marginTop: 8 }}>
+                {otherAreas.map((o) => <button key={o.study_area_id} type="button" className="btn sm" onClick={() => onSelectArea(o.study_area_id)}>Plan in {o.short_name} area{o.plannable_sites ? ` (${o.plannable_sites} sites)` : ""}</button>)}
+              </div>
+            )}
+          </div>
         )}
       </section>
 

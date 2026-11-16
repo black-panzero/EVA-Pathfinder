@@ -53,6 +53,16 @@ Each artifact in `manifest.json` carries `artifact_id`, `source_ids`, `processin
 - **Excluded:** Roubion, the failed first attempt whose tube holds atmosphere only.
 - **Planning area:** 14 of the 23 sites (including the two curated ones) lie inside it and can be routed to. The other 9 (crater-rim campaign) are shown as context with `in_planning_area: false`.
 
+## Second planning area: crater rim (`jezero-crater-rim-v1`)
+
+- **Source and window:** the same USGS CTX DTM and orthomosaic. DEM window `col_off 177, row_off 627, width 414, height 258`, multiples of 3 so it aligns to the 6 m ortho grid. Config: `config/study_area.crater-rim.json`; data folder: `data/processed/jezero-crater-rim-v1/`.
+- **Extent:** 77.2202-77.3599 °E, 18.4226-18.5096 °N (about 7.9 × 5.2 km ground).
+- **Elevation:** 100% valid; −2481.7 to −1650.3 m (830 m relief); slope p50 7.3°, p95 21.2°, max 39.7°.
+- **DEM vs 290 rover-reported elevations:** median −2.46 m, median absolute 2.97 m (5-95%: −7.64 to +4.59 m), a supporting cross-check on steep rim terrain.
+- **Image cross-correlation:** inconclusive (r ≈ 0.03) on this rugged, shadowed terrain, and reported as such.
+- **Habitat:** simulated forward habitat at Perseverance's first recorded position inside the area (site 44 / drive 4864, sol 909).
+- **Sites:** 10 are plannable here (the 9 rim sample sites plus Hans Amundsen Memorial Workspace, which lies in both areas).
+
 ## Context layers
 
 - **Whole-mosaic context image:** `context_ortho.jpg` is the full USGS CTX orthomosaic (77.16-77.70°E, 18.21-18.72°N), block-averaged from 6 m to 12 m for display. It is not used for routing.

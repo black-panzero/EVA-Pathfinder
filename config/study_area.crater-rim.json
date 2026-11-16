@@ -1,0 +1,28 @@
+{
+  "study_area_id": "jezero-crater-rim-v1",
+  "name": "Jezero Crater - western crater rim",
+  "short_name": "Crater rim",
+  "body": "Mars",
+  "dem_source_id": "usgs-m2020-trn-ctx-dtm-20m",
+  "optical_source_id": "usgs-m2020-trn-ctx-ortho-6m",
+  "_window_comment": "Window in DEM pixel units (multiples of 3 so edges fall on 6 m ortho pixel edges). Sized from the positions of the nine crater-rim sample sites (Turquoise Bay to Singita, NASA Mars 2020 Initial Reports) plus about 1.2 km margin.",
+  "dem_window": {
+    "col_off": 177,
+    "row_off": 627,
+    "width": 414,
+    "height": 258
+  },
+  "max_cells": 250000,
+  "alignment_tolerance_m": 1.0,
+  "habitat": {
+    "id": "habitat-rim-hypothetical",
+    "name": "Hypothetical forward habitat (placed at Perseverance's position on sol 909)",
+    "rover_record": {
+      "site": 44,
+      "drive": 4864
+    },
+    "note": "No habitat exists on Mars. Placed at Perseverance's first recorded position inside this area (site 44, drive 4864, sol 909), on the upper fan below the crater rim.",
+    "citation": "NASA/JPL-Caltech Mars 2020 waypoint service (site 44, drive 4864)"
+  },
+  "default_stop": "bunsen-peak"
+}

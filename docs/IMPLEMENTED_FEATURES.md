@@ -10,6 +10,7 @@ The working / not-implemented matrix required by `05_IMPLEMENTATION_PLAN.md` §3
 | Data | Geolocated Navcam photos (sols 502, 684) | Working | `photos.json` |
 | Data | 23 science sites incl. 21 Perseverance sample sites (NASA Initial Reports coordinates, coring sols); 14 routable | Working | `science_sites.json`, test D-02 |
 | Map | Whole Mars (NASA Mars Trek) → full Jezero CTX mosaic → planning area, full rover path | Working | browser smoke test |
+| Planning | Two planning areas (delta & crater floor; crater rim), `?area=` on the API and in shareable URLs, per-area in-browser engine data | Working | `test_multi_area.py`, smoke test |
 | Data | MEDA sol 684 pressure and irradiance history | Working | `meda.json` |
 | Terrain | Latitude-correct slope in ground metres; NaN-safe | Working | `test_terrain.py`, T-01..T-07 |
 | Routing | 8-neighbour A*, no corner cutting, hard slope and no-data limits; shortest vs terrain-aware | Working | `test_navigation.py`, R-01..R-08 |

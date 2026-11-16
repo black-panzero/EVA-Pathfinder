@@ -1,8 +1,8 @@
 {
-  "study_area_id": "jezero-delta-return-v1",
-  "name": "Jezero Crater - western crater floor to delta front",
+  "study_area_id": "jezero-crater-rim-v1",
+  "name": "Jezero Crater - western crater rim",
   "body": "Mars",
-  "created_at": "2026-11-16T01:17:48+00:00",
+  "created_at": "2026-11-16T02:21:59+00:00",
   "processing_version": "1.0.0",
   "context": {
     "file": "context_ortho.jpg",
@@ -31,39 +31,39 @@
     "longitude_convention": "east-positive; native CRS central meridian 0, domain -180..180 (values here 77.3-77.5 E)",
     "lat_true_scale_deg": 0.0,
     "local_frame": "x_m = easting - origin_easting; y_m = northing - origin_northing_bottom. Projected metres. East-west ground distance = projected distance * cos(latitude).",
-    "east_west_scale_factor_at_center": 0.948598
+    "east_west_scale_factor_at_center": 0.948511
   },
   "grid": {
-    "width": 405,
-    "height": 225,
+    "width": 414,
+    "height": 258,
     "res_m": 20.0,
-    "origin_easting_m": 4583983.250853,
-    "origin_northing_top_m": 1095893.140188,
-    "origin_northing_bottom_m": 1091393.140188,
+    "origin_easting_m": 4577203.250853,
+    "origin_northing_top_m": 1097153.140188,
+    "origin_northing_bottom_m": 1091993.140188,
     "dem_window_in_source": {
-      "col_off": 516,
-      "row_off": 690,
-      "width": 405,
-      "height": 225
+      "col_off": 177,
+      "row_off": 627,
+      "width": 414,
+      "height": 258
     },
     "lon_range_deg": [
-      77.33457,
-      77.471222
+      77.220187,
+      77.359876
     ],
     "lat_range_deg": [
-      18.412462,
-      18.48838
+      18.422585,
+      18.509637
     ],
     "north_up_verified": true
   },
   "dem_stats": {
     "valid_fraction": 1.0,
-    "min_m": -2610.88,
-    "max_m": -2356.21,
-    "mean_m": -2504.95,
-    "slope_deg_p50": 2.98,
-    "slope_deg_p95": 10.45,
-    "slope_deg_max": 34.13
+    "min_m": -2481.66,
+    "max_m": -1650.35,
+    "mean_m": -2154.09,
+    "slope_deg_p50": 7.3,
+    "slope_deg_p95": 21.18,
+    "slope_deg_max": 39.67
   },
   "alignment": {
     "ortho_dem_same_crs": true,
@@ -73,26 +73,26 @@
     ],
     "ortho_pixel_m": 6.0,
     "ortho_crop_px": [
-      1350,
-      750
+      1380,
+      860
     ],
     "registration_check": {
       "method": "normalised cross-correlation of ortho gradient magnitude vs DEM slope, integer 20 m shifts",
       "best_shift_cells": {
-        "rows": 2,
-        "cols": 3
+        "rows": -1,
+        "cols": 4
       },
-      "best_correlation": 0.3753,
-      "zero_shift_correlation": 0.268,
+      "best_correlation": 0.0341,
+      "zero_shift_correlation": -0.052,
       "searched_shift_cells": 4
     },
     "dem_vs_rover_elevation": {
-      "n": 252,
-      "median_dem_minus_rover_m": 0.37,
-      "mean_m": 0.4,
-      "p05_m": -3.51,
-      "p95_m": 4.82,
-      "median_abs_m": 1.55
+      "n": 290,
+      "median_dem_minus_rover_m": -2.46,
+      "mean_m": -2.01,
+      "p05_m": -7.64,
+      "p95_m": 4.59,
+      "median_abs_m": 2.97
     },
     "geology_status": "PARTIAL",
     "geology_note": "USGS metadata: 'This map was created on a semi-controlled CTX mosaic prior to the release of the controlled CTX mosaic ... will have random offsets of about 100-200 meters from the surface operations CTX mosaic.'"
@@ -160,7 +160,7 @@
     },
     "nasa-m2020-raw-images-api": {
       "source_id": "nasa-m2020-raw-images-api",
-      "status": "AVAILABLE_VERIFIED",
+      "status": "PARTIAL",
       "files": [
         {
           "path": "data/raw/m2020_raw_images/sol0502_NAVCAM_LEFT.json",
@@ -173,21 +173,9 @@
           "sha256": "a9577af13f98a4a75279ca485095c93a275b55001371c03bdaadbfd05b3ac27a",
           "bytes": 227259,
           "verified_against_config": false
-        },
-        {
-          "path": "data/processed/jezero-delta-return-v1/photos/NLF_0684_0727665509_222ECM_N0321062NCAM08111_02_095J_800.jpg",
-          "sha256": "a2c72bf6911e0c098ce2b81ea12143bf78ee0a8909a1be30a8474c3bef1b303b",
-          "bytes": 67164,
-          "verified_against_config": false
-        },
-        {
-          "path": "data/processed/jezero-delta-return-v1/photos/NLF_0502_0711519639_144ECM_N0261222NCAM00501_01_295J_800.jpg",
-          "sha256": "2dbad04095c80f4fd0db42f5a9ab5e580d7498b8baf640578050528f8e44de1f",
-          "bytes": 27818,
-          "verified_against_config": false
         }
       ],
-      "note": "2/2 cached feed JSON files and 2/2 requested photos present and hashed"
+      "note": "2/2 cached feed JSON files and 0/2 requested photos present and hashed"
     },
     "pds-m2020-meda-derived-sol0684": {
       "source_id": "pds-m2020-meda-derived-sol0684",
@@ -358,8 +346,8 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "a95ad4fd4d3b9cf0392e5c150075d5206ca554046d035551b200e2d54478bd9c",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "1e674ca0a0bab154b04448f601347c52a2ee05794092745bc6fc3860a2e5c65c",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -375,8 +363,8 @@
         "usgs-m2020-trn-ctx-ortho-6m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "f03c88366258044e6365856547cf827bd5b5606bf425dd493358c6017d3263f5",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "6b3a51dd8398327c4f2069c99739ebb9ab3d52c441fe11d95d31f4c6bbefe584",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 6.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -392,7 +380,7 @@
       ],
       "processing_version": "1.0.0",
       "checksum_sha256": "a6766a8d0a78328d641e237e8960f214900c0e54c17883ead0ea5f649889e102",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 12.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -407,8 +395,8 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "58156f64071d7945050b009e5627543c6d36ac24022f4a2459059d5587d5f0dd",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "f0516627deb8096c2372e465bedfa63c34b02d18e474bf6c7414dd6783e47967",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -423,12 +411,12 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "c4b659c995c6a3717e99f9c7dcaf3cec25daf16473ca93a08fe90d79dc581a55",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "7f6a93a629f42aa5deaa0e60ccdc75fede2ea8fd967adb11a04c46d8cb39ab18",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
-      "units": "colour ramp -2611 to -2356 m",
+      "units": "colour ramp -2482 to -1650 m",
       "evidence_level": "DERIVED",
       "limitations": "Visualization only."
     },
@@ -439,8 +427,8 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "d3fc0361fefda8dfc707483d36124cfa7b748fa7caf222e381d04ae54699d4db",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "253cb73457d0a66d6f24f14cb29708aa845d4bbbaa31c144d031065390722eb6",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -455,8 +443,8 @@
         "usgs-sim3464-geology"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "8cf952c350951eda6ded24943aa9074200073ad3e17f420c068aa7152ba51249",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "a4cd9ceb48fe5312d248cc5c84ef2ea01cf1285688e77532a032cafb442e6f73",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -471,8 +459,8 @@
         "nasa-m2020-waypoints"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "02342e0865d33491e4cea77229b383226066c5ebdd5d24fad1e5becbb53de5bd",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "fba59b0ec8fd9c678cc512abdd8e3667634c5ac84fa499e85cdc19baea35d1f4",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": null,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -487,8 +475,8 @@
         "nasa-m2020-waypoints"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "b6d25d3c55c8a5f0339f3007b2da8353bea380f42365e97b659725abc2d4b586",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "140d0b3116fb3e8174eb8ddb82349efe9bf3b602ca2789a635fbd110dd49be00",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": null,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -504,8 +492,8 @@
         "nasa-m2020-waypoints"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "063c436838539502000f972f0970538f5fc91dfc7a9b081f089b35b7d31929b3",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": null,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -521,7 +509,7 @@
       ],
       "processing_version": "1.0.0",
       "checksum_sha256": "954bd96af48edccd645c9dffebda681b1a49a695020972f31645eef4b4979649",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": null,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -536,8 +524,8 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "683c688423c44ef444cfca91f0723f4e87e4045bd583126bcc6627c888bc817f",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "b4c9a0c6c96bba79f36d458c8ba2e3a3ed04f31eac9e78b22659a1ef8efbdd35",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -553,8 +541,8 @@
         "usgs-m2020-trn-ctx-dtm-20m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "fea3bf6302794a91a2085235bbc5c30fb7c5de966f0b9f9a0a0b17ee25492b8f",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "57b5e2beef45c817bb324541767f53528e9f58b9573e04e15e112be09b5fd59b",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 20.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -570,8 +558,8 @@
         "usgs-m2020-trn-ctx-ortho-6m"
       ],
       "processing_version": "1.0.0",
-      "checksum_sha256": "e3874f003db86421ad9017a655af740103eac43a1dc77663ce89785f0a3f188f",
-      "created_at": "2026-11-16T01:17:48+00:00",
+      "checksum_sha256": "268e06a215485e25a347bbe219a60add2c792bc2916b5ba25f3fdd65b8ed7c1e",
+      "created_at": "2026-11-16T02:21:59+00:00",
       "crs": "Equirectangular Mars 2000 Sphere IAU (R=3396190 m), lat_ts=0, lon_0=0",
       "resolution_m": 6.0,
       "nodata_policy": "nodata -> transparent / unknown; never navigable by default",
@@ -670,13 +658,13 @@
     "science_sites.json": "science_sites.json",
     "observations.json": "photos.json + meda.json",
     "docs/DATA_PROVENANCE.md": "docs/DATA_PROVENANCE.md (maintained outside the pipeline)",
-    "data/processed/ (flat)": "data/processed/jezero-delta-return-v1/ (one folder per study area)"
+    "data/processed/ (flat)": "data/processed/jezero-crater-rim-v1/ (one folder per study area)"
   },
   "deviations": [
     {
       "topic": "study_area_size",
       "handoff_guidance": "04 section 2 suggests a 2-4 km wide DEM-valid region",
-      "actual": "8.1 x 4.5 km projected (405 x 225 cells at 20 m)",
+      "actual": "8.3 x 5.2 km projected (414 x 258 cells at 20 m)",
       "reason": "The window must contain the hypothetical habitat at the Octavia E. Butler landing localization (site 3 / drive 0), the Wildcat Ridge delta-front target (site 26 / drive 1222) and the Three Forks sample depot (site 32 / drive 250). These published rover localizations are several km apart, so a 2-4 km window cannot hold all three. The window is still 100% DEM-valid, inside optical coverage, and within max_cells.",
       "window_changed": false
     }

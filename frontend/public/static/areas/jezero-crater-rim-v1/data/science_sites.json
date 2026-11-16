@@ -1,0 +1,1149 @@
+{
+  "habitat": {
+    "id": "habitat-rim-hypothetical",
+    "name": "Hypothetical forward habitat (placed at Perseverance's position on sol 909)",
+    "evidence_level": "SIMULATED",
+    "note": "No habitat exists on Mars. Placed at Perseverance's first recorded position inside this area (site 44, drive 4864, sol 909), on the upper fan below the crater rim.",
+    "citation": "NASA/JPL-Caltech Mars 2020 waypoint service (site 44, drive 4864)",
+    "x_m": 7736.35,
+    "y_m": 3598.19,
+    "lon_deg": 77.35070429,
+    "lat_deg": 18.48328845,
+    "cell": [
+      78,
+      386
+    ],
+    "sol": 909,
+    "site": 44,
+    "drive": 4864,
+    "rover_elev_geoid_m": -2422.607422,
+    "dem_elev_m": -2425.4
+  },
+  "sites": [
+    {
+      "id": "wildcat-ridge",
+      "name": "Wildcat Ridge (delta front)",
+      "kind": "science_target",
+      "evidence_level": "NASA_OBSERVATION",
+      "location_basis": "Rover localization at site 26 / drive 1222 (sols 502 onward), the parking position during the Wildcat Ridge abrasion and coring campaign. The outcrop is within metres of the rover, not exactly at this point.",
+      "science_summary": "Layered, fine-grained sedimentary rock at the front of the Jezero delta, interpreted as mud and fine sand deposited in an evaporating lake. SHERLOC made the mission's most abundant organic-molecule detections to date on the Berry Hollow abrasion patch. Cores 'Hazeltop' (kept on the rover) and 'Bearwallow' (later placed in the Three Forks depot) were collected here.",
+      "default_activity_min": 60,
+      "citations": [
+        {
+          "title": "NASA's Perseverance Rover Investigates Geologically Rich Mars Terrain (NASA/JPL news release, 15 Sept 2022)",
+          "url": "https://www.jpl.nasa.gov/news/nasas-perseverance-rover-investigates-geologically-rich-mars-terrain"
+        },
+        {
+          "title": "PIA24929: Perseverance Rock Cores From Wildcat Ridge (Hazeltop imaged sol 509)",
+          "url": "https://www.jpl.nasa.gov/images/pia24929-perseverance-rock-cores-from-wildcat-ridge/"
+        },
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Hazeltop and Bearwallow (Samples 12 and 13)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-hazeltop-and-bearwallow-samples-12-and-13/"
+        },
+        {
+          "title": "NASA news release: NASA's Perseverance Rover Investigates Geologically Rich Mars Terrain",
+          "url": "https://www.nasa.gov/news-release/nasas-perseverance-rover-investigates-geologically-rich-mars-terrain/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 2: Delta Front Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume2.pdf"
+        }
+      ],
+      "short": "Organic-rich lake mudstone on the delta front",
+      "samples": [
+        "Hazeltop",
+        "Bearwallow"
+      ],
+      "sample_sol": 509,
+      "campaign": "Delta front",
+      "rock_type": "mudstone (sulfate-bearing)",
+      "x_m": 11009.54,
+      "y_m": 2137.59,
+      "lon_deg": 77.40592495,
+      "lat_deg": 18.45864728,
+      "cell": null,
+      "sol": 502,
+      "site": 26,
+      "drive": 1222,
+      "rover_elev_geoid_m": -2523.167969,
+      "dem_elev_m": null,
+      "in_planning_area": false
+    },
+    {
+      "id": "three-forks-depot",
+      "name": "Three Forks Sample Depot",
+      "kind": "science_target",
+      "evidence_level": "NASA_OBSERVATION",
+      "location_basis": "Rover localization at site 32 / drive 250 (sol 654), at the start of depot operations. The 10 tubes were dropped at mapped spots spread over the depot area between sols 653 and 690.",
+      "science_summary": "A flat area near the base of the Jezero delta where Perseverance laid down 10 duplicate sample tubes (rock cores, regolith, atmosphere and a witness tube) as a backup cache for Mars Sample Return. It is a reference point for a planned retrieval stop, not an outcrop.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA's Perseverance Rover Deposits First Sample on Mars Surface (NASA/JPL news, Dec 2022)",
+          "url": "https://www.jpl.nasa.gov/news/nasas-perseverance-rover-deposits-first-sample-on-mars-surface"
+        },
+        {
+          "title": "PIA25682: Perseverance's Three Forks Sample Depot Map",
+          "url": "https://www.jpl.nasa.gov/images/pia25682-perseverances-three-forks-sample-depot-map/"
+        }
+      ],
+      "short": "Backup cache of 10 sample tubes near the delta base",
+      "x_m": 11123.46,
+      "y_m": 1774.6,
+      "lon_deg": 77.40784692,
+      "lat_deg": 18.4525234,
+      "cell": null,
+      "sol": 654,
+      "site": 32,
+      "drive": 250,
+      "rover_elev_geoid_m": -2545.479,
+      "dem_elev_m": null,
+      "in_planning_area": false
+    },
+    {
+      "id": "rochette",
+      "name": "Rochette",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Montdenier",
+        "Montagnac"
+      ],
+      "campaign": "Crater floor",
+      "rock_type": "basalt (Maaz formation)",
+      "region_of_interest": "Artuby ridge",
+      "short": "Basalt \u00b7 Crater floor",
+      "science_summary": "The first rock cores ever collected on Mars for return to Earth. The salts in this lava-like rock show that groundwater moved through it long ago.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Montdenier and Montagnac (Samples 2 and 3)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-montdenier-and-montagnac-samples-2-and-3/"
+        },
+        {
+          "title": "NASA news release: NASA's Perseverance Rover Collects Puzzle Pieces of Mars History",
+          "url": "https://www.nasa.gov/news-release/nasas-perseverance-rover-collects-puzzle-pieces-of-mars-history/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 1: Crater Floor Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume1.pdf"
+        }
+      ],
+      "notes": "Montdenier was cored sol 190 (31 Aug 2021) and sealed sol 194, after the team took extra images of it first. Montagnac was cored and sealed sol 196. NASA's sample table gives the sealing sols (194/196). Both cores share one coordinate, at abrasion patch Bellegarde. Montdenier went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 190 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 13288.06,
+      "y_m": 483.48,
+      "lon_deg": 77.44436502,
+      "lat_deg": 18.43074132,
+      "cell": null,
+      "sol": 180,
+      "site": 7,
+      "drive": 0,
+      "rover_elev_geoid_m": -2574.553,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 190,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "brac",
+      "name": "Brac",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Salette",
+        "Coulettes"
+      ],
+      "campaign": "Crater floor",
+      "rock_type": "olivine cumulate (Seitah formation)",
+      "region_of_interest": "S\u00e9\u00edtah South",
+      "short": "Olivine cumulate \u00b7 Crater floor",
+      "science_summary": "A coarse olivine-rich igneous rock that formed when crystals settled in a thick melt or magma body. It was altered by water afterwards, which makes it a key rock for dating the crater floor.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Salette and Coulettes (Samples 4 and 5)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-salette-and-coulettes-samples-4-and-5/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 1: Crater Floor Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume1.pdf"
+        }
+      ],
+      "notes": "Both cores were sealed on the sol they were cored (262 and 271). Abrasion patch Dourbes. Coulettes went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 262 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 13207.74,
+      "y_m": 674.86,
+      "lon_deg": 77.44301,
+      "lat_deg": 18.43397,
+      "cell": null,
+      "sol": 248,
+      "site": 8,
+      "drive": 0,
+      "rover_elev_geoid_m": -2569.2,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 262,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "issole",
+      "name": "Issole",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Robine",
+        "Malay"
+      ],
+      "campaign": "Crater floor",
+      "rock_type": "olivine cumulate (Seitah formation)",
+      "region_of_interest": "S\u00e9\u00edtah South",
+      "short": "Olivine cumulate \u00b7 Crater floor",
+      "science_summary": "A second pair from the olivine-rich Seitah unit. Collecting it was delayed after pebbles jammed the rover's bit carousel following the first core.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Robine and Malay (Samples 6 and 7)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-robine-and-malay-samples-6-and-7/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 1: Crater Floor Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume1.pdf"
+        }
+      ],
+      "notes": "Robine was cored sol 295 (18 Dec 2021) and sealed sol 298. Malay was cored and sealed sol 337 (30 Jan 2022). NASA's sample table lists only the sealing sols (298/337). Both cores share one coordinate (abrasion patch Quartier). Waypoints show small rover moves in between: site 9 drive 0 from sol 286, then site 9 drive 276 by sol 335. Malay went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 295 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 13108.16,
+      "y_m": 596.02,
+      "lon_deg": 77.44133,
+      "lat_deg": 18.43264,
+      "cell": null,
+      "sol": 286,
+      "site": 9,
+      "drive": 0,
+      "rover_elev_geoid_m": -2574.3,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 295,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "sid",
+      "name": "Sid",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Hahonih",
+        "Atsah"
+      ],
+      "campaign": "Crater floor",
+      "rock_type": "basaltic andesite (Maaz formation, Ch'al member)",
+      "region_of_interest": "Ch\u2019a\u0142 member of M\u00e1az formation, east of the Octavia E. Butler landing site",
+      "short": "Basaltic andesite \u00b7 Crater floor",
+      "science_summary": "Igneous rock from the Maaz formation near the landing site, which completes the crater-floor set. Its composition helps date and link the crater-floor lava units.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Ha'ahoni and Atsa (Samples 8 and 9)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-haahoni-and-atsa-samples-8-and-9/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 1: Crater Floor Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume1.pdf"
+        }
+      ],
+      "notes": "NASA spells the cores Ha'ahoni (Hahonih) and Atsa (Atsah). Hahonih was cored and sealed sol 371. Atsah was cored sol 374 (9 Mar 2022) and sealed sol 377; NASA's table lists only the sealing sol (377). Abrasion patch Alfalfa. Atsah went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 371 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 13765.62,
+      "y_m": 1261.32,
+      "lon_deg": 77.45242176,
+      "lat_deg": 18.44386406,
+      "cell": null,
+      "sol": 362,
+      "site": 11,
+      "drive": 108,
+      "rover_elev_geoid_m": -2568.357,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 371,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "skinner-ridge",
+      "name": "Skinner Ridge",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Swift Run",
+        "Skyland"
+      ],
+      "campaign": "Delta front",
+      "rock_type": "sandstone",
+      "region_of_interest": "Hawksbill Gap",
+      "short": "Sandstone \u00b7 Delta front",
+      "science_summary": "The first sedimentary cores. This fine-to-medium sandstone from the delta front may carry grains washed in from far outside Jezero.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Swift Run and Skyland (Samples 10 and 11)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-swift-run-and-skyland-samples-10-and-11/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 2: Delta Front Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume2.pdf"
+        }
+      ],
+      "notes": "Region of interest: Hawksbill Gap. Both cores were sealed on the sol they were cored. Skyland went to the Three Forks depot. The last final waypoint before sol 490 is sol 477 (site 26, drive 1004).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 490 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 11024.11,
+      "y_m": 2154.41,
+      "lon_deg": 77.40617078,
+      "lat_deg": 18.458931,
+      "cell": null,
+      "sol": 477,
+      "site": 26,
+      "drive": 1004,
+      "rover_elev_geoid_m": -2520.185,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 490,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "amalik",
+      "name": "Amalik",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Shuyak",
+        "Mageik"
+      ],
+      "campaign": "Delta front",
+      "rock_type": "mudstone (olivine-bearing, sulfate-rich)",
+      "region_of_interest": "Cape Nukshak",
+      "short": "Mudstone \u00b7 Delta front",
+      "science_summary": "A fine-grained lake sediment from the delta front with sulfates and possible organic signals. It adds to the delta's record of past water chemistry.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Shuyak and Mageik (Samples 14 and 15)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-shuyak-and-mageik-samples-14-and-15/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 2: Delta Front Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume2.pdf"
+        }
+      ],
+      "notes": "Shuyak was cored and sealed sol 575. Mageik was cored sol 579 (6 Oct 2022) but not sealed until sol 619, 40 sols later. NASA's table lists only the sealing sol (619), after the rover had moved on, so use the coring sol 579 to place the site. Region of interest: Cape Nukshak. Mageik went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 575 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 10743.2,
+      "y_m": 1665.9,
+      "lon_deg": 77.40143171,
+      "lat_deg": 18.45068954,
+      "cell": null,
+      "sol": 565,
+      "site": 29,
+      "drive": 0,
+      "rover_elev_geoid_m": -2526.322706,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 575,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "hidden-harbor",
+      "name": "Hidden Harbor",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Kukaklek"
+      ],
+      "campaign": "Delta front",
+      "rock_type": "very fine sandstone (sulfate-bearing)",
+      "region_of_interest": "Cape Nukshak",
+      "short": "Very fine sandstone \u00b7 Delta front",
+      "science_summary": "A sulfate-cemented, very fine-grained sediment from the delta front. It records how salty water moved through the delta.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Kukaklek (Sample 16)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-kukaklek-sample-16/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 2: Delta Front Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume2.pdf"
+        }
+      ],
+      "notes": "Kukaklek was cored sol 623 (20 Nov 2022) and sealed sol 631, 8 sols later. NASA's table lists only the sealing sol (631). Use the coring sol 623 for position: the waypoint at sol 609 (site 30, drive 1172) matches the report coordinate. By sol 629 the rover had driven to site 30 drive 2188, near Observation Mountain.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 623 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 10605.83,
+      "y_m": 1840.55,
+      "lon_deg": 77.39911421,
+      "lat_deg": 18.45363597,
+      "cell": null,
+      "sol": 609,
+      "site": 30,
+      "drive": 1172,
+      "rover_elev_geoid_m": -2517.093594,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 623,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "observation-mountain",
+      "name": "Observation Mountain",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Atmo Mountain",
+        "Crosswind Lake"
+      ],
+      "campaign": "Delta front",
+      "rock_type": "regolith",
+      "region_of_interest": "Observation Mountain",
+      "short": "Regolith \u00b7 Delta front",
+      "science_summary": "The mission's first regolith (loose surface material) samples, taken from a wind-blown sand ripple. Future human missions need this to understand Mars dust and soil hazards.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Atmo Mountain and Crosswind Lake (Samples 17 and 18)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-atmo-mountain-and-crosswind-lake-samples-17-and-18/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 2: Delta Front Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume2.pdf"
+        }
+      ],
+      "notes": "Collected with the regolith bit. Regolith work ran in two phases (sols 593-606 and 632-641). Atmo Mountain was collected and sealed sol 634, Crosswind Lake sol 639. The Initial Report's sealing line for Crosswind Lake says 'Sol 629', which looks like a typo for 639: it is before the collection date and conflicts with NASA's table. The 'Hidden Harbor/regolith' item in the brief is really two entries: Kukaklek (Hidden Harbor) and these regolith tubes (Observation Mountain). Atmo Mountain went to the Three Forks depot.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 634 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 10730.54,
+      "y_m": 1702.94,
+      "lon_deg": 77.40121811,
+      "lat_deg": 18.45131442,
+      "cell": null,
+      "sol": 632,
+      "site": 31,
+      "drive": 0,
+      "rover_elev_geoid_m": -2525.061741,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 634,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "berea",
+      "name": "Berea",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Melyn"
+      ],
+      "campaign": "Upper fan",
+      "rock_type": "sandstone",
+      "region_of_interest": "Tenby",
+      "short": "Sandstone \u00b7 Upper fan",
+      "science_summary": "The first sample from the upper fan, a sedimentary rock carried in by the river system that built the fan. It gives a view of material from Jezero's watershed.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Melyn (Sample 19)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-melyn-sample-19/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 3: Jezero Upper Fan Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume3.pdf"
+        }
+      ],
+      "notes": "Cored and sealed sol 749 (30 Mar 2023). Region of interest: Tenby. The Initial Report calls it a medium-grained sandstone, probably laid down by a river. The report coordinate matches the sol-736 final waypoint (site 37 drive 0).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 749 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 9706.66,
+      "y_m": 2823.41,
+      "lon_deg": 77.38394465,
+      "lat_deg": 18.47021736,
+      "cell": null,
+      "sol": 736,
+      "site": 37,
+      "drive": 0,
+      "rover_elev_geoid_m": -2448.912591,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 749,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "emerald-lake",
+      "name": "Emerald Lake",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Otis Peak"
+      ],
+      "campaign": "Upper fan",
+      "rock_type": "conglomerate",
+      "region_of_interest": "Powell Peak",
+      "short": "Conglomerate \u00b7 Upper fan",
+      "science_summary": "The first conglomerate core: pebbles cemented together, carried by a fast river. The pebbles may come from rocks far outside Jezero crater.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Otis Peak (Sample 20)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-otis-peak-sample-20/"
+        },
+        {
+          "title": "NASA Photojournal PIA25962: Perseverance's Otis Peak Sample Reveals Colors of Conglomerate",
+          "url": "https://photojournal.jpl.nasa.gov/catalog/PIA25962"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 3: Jezero Upper Fan Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume3.pdf"
+        }
+      ],
+      "notes": "Cored sol 822 (13 Jun 2023, designation M2020-822-23) and sealed sol 832, 10 sols later. NASA's table lists only the sealing sol (832), so use the coring sol 822 to place it. Region of interest: Powell Peak; the outcrop/rock is Emerald Lake (named Onahu in some secondary tables). The report coordinate matches the sol-821 final waypoint (site 40 drive 132).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 822 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 8770.64,
+      "y_m": 3579.9,
+      "lon_deg": 77.36815348,
+      "lat_deg": 18.4829798,
+      "cell": null,
+      "sol": 821,
+      "site": 40,
+      "drive": 132,
+      "rover_elev_geoid_m": -2421.026026,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 822,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "dream-lake",
+      "name": "Dream Lake",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Pilot Mountain"
+      ],
+      "campaign": "Upper fan",
+      "rock_type": "sandstone",
+      "region_of_interest": "Dream Lake",
+      "short": "Sandstone \u00b7 Upper fan",
+      "science_summary": "Chosen to represent the youngest material the rover would meet on its drive across the upper fan.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Pilot Mountain (Sample 21)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-pilot-mountain-sample-21/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 3: Jezero Upper Fan Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume3.pdf"
+        }
+      ],
+      "notes": "Cored sol 882 (13 Aug 2023, designation M2020-882-24) but not sealed until sol 913, 31 sols later. The tube was reused after a failed coring attempt on the boulder 'Mount Meeker'. NASA's table lists the sealing sol (913), when the rover was about 1 km away at site 45, so use the coring sol 882 and the report coordinate.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 882 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 8315.16,
+      "y_m": 3628.6,
+      "lon_deg": 77.3604692,
+      "lat_deg": 18.48380149,
+      "cell": null,
+      "sol": 872,
+      "site": 43,
+      "drive": 0,
+      "rover_elev_geoid_m": -2417.740379,
+      "dem_elev_m": null,
+      "in_planning_area": false,
+      "sample_sol": 882,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)"
+    },
+    {
+      "id": "hans-amundsen-memorial-workspace",
+      "name": "Hans Amundsen Memorial Workspace",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Pelican Point"
+      ],
+      "campaign": "Margin unit",
+      "rock_type": "carbonate-bearing sandstone",
+      "region_of_interest": "Mandu Wall",
+      "short": "Carbonate-bearing sandstone \u00b7 Margin unit",
+      "science_summary": "The first sample from the margin unit, a carbonate-rich deposit along the inner edge of the crater. It may have formed at an ancient lake shore.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Pelican Point (Sample 22)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-pelican-point-sample-22/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 4: Jezero Margin Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume4.pdf"
+        }
+      ],
+      "notes": "Cored and sealed sol 923. The Initial Report's coring date is 23 Sep 2023, while NASA's table gives sealing on 25 Sep 2023 for the same sol; the date mismatch is unresolved, so use the sol. Region of interest: Mandu Wall. The report coordinate matches the sol-911 final waypoint (site 45 drive 0).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 923 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 7733.19,
+      "y_m": 3607.59,
+      "lon_deg": 77.35065098,
+      "lat_deg": 18.48344692,
+      "cell": [
+        77,
+        386
+      ],
+      "sol": 911,
+      "site": 45,
+      "drive": 0,
+      "rover_elev_geoid_m": -2423.102833,
+      "dem_elev_m": -2424.86,
+      "in_planning_area": true,
+      "sample_sol": 923,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "Nue",
+        "name": "Upper etched unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "turquoise-bay",
+      "name": "Turquoise Bay",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Lefroy Bay"
+      ],
+      "campaign": "Margin unit",
+      "rock_type": "carbonate- and silica-bearing sandstone",
+      "region_of_interest": "Turquoise Bay",
+      "short": "Carbonate- and silica-bearing sandstone \u00b7 Margin unit",
+      "science_summary": "A coarser margin-unit sandstone with abundant carbonate and fine-grained silica, two minerals that are good at preserving signs of ancient life.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Lefroy Bay (Sample 23)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-lefroy-bay-sample-23/"
+        },
+        {
+          "title": "NASA Science: A Tale of Turquoise Bay: Sampling Unique Bedrock at the Margin Unit",
+          "url": "https://science.nasa.gov/missions/mars-2020-perseverance/a-tale-of-turquoise-bay-sampling-unique-bedrock-at-the-margin-unit/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 4: Jezero Margin Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume4.pdf"
+        }
+      ],
+      "notes": "Drilled on sol 942, per the Initial Report's anomaly note. Arm (SHA) faults kept the tube open until it was sealed on sol 949, which is the sol in both the designation M2020-949-26 and NASA's table (21 Oct 2023). The report coordinate matches the sol-933 final waypoint (site 46 drive 0); the rover had not driven by sol 949. NASA's table also shows a caption date of Aug. 6, 2021 (Sol 164) next to this sample, which looks like a copy-paste error from Roubion.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 942 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 7519.5,
+      "y_m": 3917.35,
+      "lon_deg": 77.34704595,
+      "lat_deg": 18.48867278,
+      "cell": [
+        62,
+        375
+      ],
+      "sol": 933,
+      "site": 46,
+      "drive": 0,
+      "rover_elev_geoid_m": 2407.641882,
+      "dem_elev_m": -2411.2,
+      "in_planning_area": true,
+      "sample_sol": 942,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "Nue",
+        "name": "Upper etched unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "bunsen-peak",
+      "name": "Bunsen Peak",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Comet Geyser"
+      ],
+      "campaign": "Margin unit",
+      "rock_type": "carbonate-silica rock",
+      "region_of_interest": "Western Margin",
+      "short": "Carbonate-silica rock \u00b7 Margin unit",
+      "science_summary": "A rock made mostly of carbonate and silica, both strong at preserving biosignatures. NASA called it a sample that embodies why the rover came to Jezero.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Comet Geyser (Sample 24)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-comet-geyser-sample-24/"
+        },
+        {
+          "title": "NASA Science: Comet Geyser: Perseverance's 24th Rock Core",
+          "url": "https://science.nasa.gov/missions/mars-2020-perseverance/comet-geyser-perseverances-24th-rock-core/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 4: Jezero Margin Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume4.pdf"
+        }
+      ],
+      "notes": "NASA pages variously call it the 21st rock core or the 24th sample: the 24th counts all tubes in the sample-number series, while 21st counts rock cores only. Cored and sealed sol 1088 (Initial Report: 11 Mar 2024; NASA's table: sealed 12 Mar 2024). The Initial Report gives the region of interest as Western Margin.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1088 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 6344.28,
+      "y_m": 4106.66,
+      "lon_deg": 77.3272192,
+      "lat_deg": 18.49186664,
+      "cell": [
+        52,
+        317
+      ],
+      "sol": 1084,
+      "site": 51,
+      "drive": 0,
+      "rover_elev_geoid_m": 2382.434036,
+      "dem_elev_m": -2385.38,
+      "in_planning_area": true,
+      "sample_sol": 1088,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "Nue",
+        "name": "Upper etched unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "cheyava-falls",
+      "name": "Cheyava Falls",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Sapphire Canyon"
+      ],
+      "campaign": "Margin unit / Neretva Vallis (Bright Angel)",
+      "rock_type": "mudstone (vein-filled, Bright Angel formation)",
+      "region_of_interest": "Bright Angel",
+      "short": "Mudstone \u00b7 Margin unit / Neretva Vallis (Bright Angel)",
+      "science_summary": "The 'leopard spot' rock. Its organic carbon, iron phosphate and iron sulfide reaction fronts were later described by NASA as a potential biosignature.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: Meet the Mars Samples: Sapphire Canyon (Sample 25)",
+          "url": "https://science.nasa.gov/resource/meet-the-mars-samples-sapphire-canyon-sample-25/"
+        },
+        {
+          "title": "NASA: NASA's Perseverance Rover Scientists Find Intriguing Mars Rock",
+          "url": "https://www.nasa.gov/missions/mars-2020-perseverance/perseverance-rover/nasas-perseverance-rover-scientists-find-intriguing-mars-rock/"
+        },
+        {
+          "title": "NASA news release: NASA Says Mars Rover Discovered Potential Biosignature Last Year",
+          "url": "https://www.nasa.gov/news-release/nasa-says-mars-rover-discovered-potential-biosignature-last-year/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 4: Jezero Margin Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume4.pdf"
+        }
+      ],
+      "notes": "Cored and sealed sol 1215 (21 Jul 2024). The Initial Report (vol. 4, Margin campaign) gives the region of interest as Bright Angel, and NASA's table lists the sampling location as Neretva Vallis. The rock is fine-grained with abundant calcium sulfate veins.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1215 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 5036.08,
+      "y_m": 4439.06,
+      "lon_deg": 77.30514915,
+      "lat_deg": 18.49747434,
+      "cell": [
+        36,
+        251
+      ],
+      "sol": 1210,
+      "site": 56,
+      "drive": 0,
+      "rover_elev_geoid_m": -2354.235808,
+      "dem_elev_m": -2352.11,
+      "in_planning_area": true,
+      "sample_sol": 1215,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "Nue",
+        "name": "Upper etched unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "shallow-bay",
+      "name": "Shallow Bay",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Silver Mountain"
+      ],
+      "campaign": "Crater rim",
+      "rock_type": "pyroxenite (low-calcium pyroxene-rich igneous rock)",
+      "region_of_interest": "Shallow Bay",
+      "short": "Pyroxenite \u00b7 Crater rim",
+      "science_summary": "The first sample from the Jezero crater rim. This ancient, pyroxene-rich rock may be among the oldest material Perseverance has collected.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science blog: Persevering Through Science",
+          "url": "https://science.nasa.gov/blog/persevering-through-science/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 5: Crater Rim Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume5.pdf"
+        }
+      ],
+      "notes": "Region of interest: Shallow Bay, on Witch Hazel Hill. The Initial Report gives a coring date of 27 Jan 2025 and sealing sol 1401. The NASA blog dates the sol-1401 CacheCam image to 28 Jan 2025, so the report date may be the UTC start of the sol.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1401 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 2641.11,
+      "y_m": 2252.89,
+      "lon_deg": 77.26474449,
+      "lat_deg": 18.46059241,
+      "cell": [
+        145,
+        132
+      ],
+      "sol": 1400,
+      "site": 66,
+      "drive": 0,
+      "rover_elev_geoid_m": -1820.052,
+      "dem_elev_m": -1817.7,
+      "in_planning_area": true,
+      "sample_sol": 1401,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "cr",
+        "name": "Crater rim unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "tablelands",
+      "name": "Tablelands",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Green Gardens"
+      ],
+      "campaign": "Crater rim",
+      "rock_type": "serpentinite",
+      "region_of_interest": "Tablelands",
+      "short": "Serpentinite \u00b7 Crater rim",
+      "science_summary": "A serpentine-rich rock from the crater rim. Serpentine forms when water reacts with iron and magnesium rocks, and such settings can produce hydrogen and support microbes on Earth.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science blog: Sealing the Deal",
+          "url": "https://science.nasa.gov/blog/sealing-the-deal/"
+        },
+        {
+          "title": "NASA Science Photojournal: Green Gardens Sample in Tube",
+          "url": "https://science.nasa.gov/photojournal/green-gardens-sample-in-tube/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 5: Crater Rim Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume5.pdf"
+        }
+      ],
+      "notes": "Cored sol 1420 (14 Feb 2025). Sealing needed many attempts and finally worked on sol 1433. NASA's table lists only that sealing sol (1433). The rover drove between the two sols: final waypoints are site 69 drive 0 at sol 1416 and site 69 drive 2000 at sol 1431. Use the coring sol 1420 to place the site; the report coordinate matches the sol-1416 waypoint.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1420 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 2636.05,
+      "y_m": 2252.91,
+      "lon_deg": 77.26465918,
+      "lat_deg": 18.46059266,
+      "cell": [
+        145,
+        131
+      ],
+      "sol": 1416,
+      "site": 69,
+      "drive": 0,
+      "rover_elev_geoid_m": -1821.051,
+      "dem_elev_m": -1822.43,
+      "in_planning_area": true,
+      "sample_sol": 1420,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "cr",
+        "name": "Crater rim unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "broom-point",
+      "name": "Broom Point",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Main River"
+      ],
+      "campaign": "Crater rim",
+      "rock_type": "coarse siltstone (volcaniclastic, impact or sedimentary origin)",
+      "region_of_interest": "Broom Point",
+      "short": "Coarse siltstone \u00b7 Crater rim",
+      "science_summary": "A layered rock from Witch Hazel Hill on the crater rim that may record very early crust or impact deposits from before Jezero formed.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science Photojournal: Perseverance Cores 'Main River' (PIA26571)",
+          "url": "https://science.nasa.gov/photojournal/perseverance-cores-main-river/"
+        },
+        {
+          "title": "NASA Photojournal PIA26571",
+          "url": "https://photojournal.jpl.nasa.gov/catalog/PIA26571"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 5: Crater Rim Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume5.pdf"
+        }
+      ],
+      "notes": "The Initial Report gives a coring date of 09 Mar 2025, while NASA's sample table and PIA26571 give sol 1441 = 10 Mar 2025. The difference looks like a UTC/sol-boundary offset.",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1441 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 2268.84,
+      "y_m": 2319.9,
+      "lon_deg": 77.25846404,
+      "lat_deg": 18.46172288,
+      "cell": [
+        142,
+        113
+      ],
+      "sol": 1435,
+      "site": 69,
+      "drive": 2124,
+      "rover_elev_geoid_m": -1919.036,
+      "dem_elev_m": -1922.87,
+      "in_planning_area": true,
+      "sample_sol": 1441,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "cr",
+        "name": "Crater rim unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "pine-pond",
+      "name": "Pine Pond",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Bell Island"
+      ],
+      "campaign": "Crater rim",
+      "rock_type": "spherule-bearing rock (lapilli tuff or impact ejecta)",
+      "region_of_interest": "Pine Pond",
+      "short": "Spherule-bearing rock \u00b7 Crater rim",
+      "science_summary": "Holds small round grains called spherules, which may come from volcanic eruptions or from impacts. These could help date events at the crater rim.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science: A Tough Drill at Witch Hazel Hill",
+          "url": "https://science.nasa.gov/uncategorized/a-tough-drill-at-witch-hazel-hill/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 5: Crater Rim Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume5.pdf"
+        }
+      ],
+      "notes": "Drilled sol 1483 (Initial Report: 21 Apr 2025; the NASA blog says sol 1483 = 22 Apr 2025). The core stayed in the rock until sol 1490 and was overfilled. Excess material was dumped and the tube was stowed on sol 1497 still unsealed. NASA's table lists the sealing sol as TBD. The rover did not drive between sols 1478 and 1483 (site 73 drive 0).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1483 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 2235.33,
+      "y_m": 2351.19,
+      "lon_deg": 77.25789879,
+      "lat_deg": 18.46225085,
+      "cell": [
+        140,
+        111
+      ],
+      "sol": 1478,
+      "site": 73,
+      "drive": 0,
+      "rover_elev_geoid_m": -1925.65,
+      "dem_elev_m": -1936.33,
+      "in_planning_area": true,
+      "sample_sol": 1483,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "cr",
+        "name": "Crater rim unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "salmon-point",
+      "name": "Salmon Point",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Gallants"
+      ],
+      "campaign": "Crater rim (Krokodillen)",
+      "rock_type": "clay-bearing siltstone",
+      "region_of_interest": "North Twin Lake",
+      "short": "Clay-bearing siltstone \u00b7 Crater rim (Krokodillen)",
+      "science_summary": "A clay (smectite)-rich rock from the Krokodillen area on the crater rim. Clays form in water and are good at preserving organic matter.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science: Mars Rock Samples (Perseverance sample table)",
+          "url": "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+        },
+        {
+          "title": "NASA Science blog: Continuing the Quest for Clays",
+          "url": "https://science.nasa.gov/blog/continuing-the-quest-for-clays/"
+        },
+        {
+          "title": "Mars 2020 Initial Reports, Vol. 5: Crater Rim Campaign (PDS Sample Dossier)",
+          "url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_sample_dossier/initial_reports/initial_reports_volume5.pdf"
+        }
+      ],
+      "notes": "Cored sol 1552 (1 Jul 2025, Initial Report vol. 5) and left unsealed; NASA's table lists the sealing sol as TBD. The NASA blog shows the Gallants target on sol 1551. Region of interest: North Twin Lake. The report coordinate matches the sol-1551 final waypoint (site 77 drive 0).",
+      "location_basis": "Rover position printed in the Mars 2020 Initial Report for the sol 1552 coring; rover site/drive from the last localization on or before that sol.",
+      "x_m": 2195.76,
+      "y_m": 2270.19,
+      "lon_deg": 77.25723123,
+      "lat_deg": 18.46088429,
+      "cell": [
+        144,
+        109
+      ],
+      "sol": 1551,
+      "site": 77,
+      "drive": 0,
+      "rover_elev_geoid_m": -1938.75,
+      "dem_elev_m": -1942.97,
+      "in_planning_area": true,
+      "sample_sol": 1552,
+      "position_source": "Mars 2020 Initial Report (PDS sample dossier)",
+      "mapped_geologic_unit": {
+        "symbol": "cr",
+        "name": "Crater rim unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    },
+    {
+      "id": "singita",
+      "name": "Singita",
+      "kind": "sample_site",
+      "evidence_level": "NASA_OBSERVATION",
+      "samples": [
+        "Singita"
+      ],
+      "campaign": "Lac de Charmes (outside the crater rim)",
+      "rock_type": "crystalline igneous rock (possibly gabbroic)",
+      "region_of_interest": "Lac de Charmes",
+      "short": "Crystalline igneous rock \u00b7 Lac de Charmes (outside the crater rim)",
+      "science_summary": "The first crystalline igneous sample collected outside Jezero crater. It may be among the oldest rocks in the collection, possibly older than Jezero itself.",
+      "default_activity_min": 45,
+      "citations": [
+        {
+          "title": "NASA Science blog: Newest Sample, Oldest Rock?",
+          "url": "https://science.nasa.gov/blog/newest-sample-oldest-rock/"
+        },
+        {
+          "title": "The Planetary Society: Mars rover samples what could be one of the oldest rocks on the Martian surface",
+          "url": "https://planetary.org/articles/mars-rover-samples-what-could-be-one-of-the-oldest-rocks-on-mars-surface"
+        }
+      ],
+      "notes": "Not in Initial Reports vols. 1-5 or NASA's sample table yet, so it has no sample number or designation. The NASA blog dates a coring-bit image to Oct. 24, 2026 (sol 2018), 'shortly after coring'. The Planetary Society gives the same coring date. The outcrop or workspace name is not stated: an earlier abrasion at 'Badger Peak' was too hard to core, and Singita came from a neighbouring rock about 100 m away (latest abrasion 'Pumbe', sol 2011). NASA's table and the mid-2025 tube count (33 tubes by sol 1574) suggest no samples between Gallants and Singita, and the blog calls Singita the first sample in more than a year. Rock type comes from the blog's account of the gabbro search and the Planetary Society's 'crystalline igneous', not from a formal classification.",
+      "location_basis": "No Initial Report yet: rover position from the last NASA localization on or before sol 2018 (coring sol).",
+      "x_m": 752.07,
+      "y_m": 771.16,
+      "lon_deg": 77.23287536,
+      "lat_deg": 18.43559464,
+      "cell": [
+        219,
+        37
+      ],
+      "sol": 2009,
+      "site": 92,
+      "drive": 0,
+      "rover_elev_geoid_m": -1937.453125,
+      "dem_elev_m": -1937.56,
+      "in_planning_area": true,
+      "sample_sol": 2018,
+      "position_source": "NASA rover localization on or before the coring sol",
+      "mapped_geologic_unit": {
+        "symbol": "Nrb",
+        "name": "Rugged bright unit",
+        "caveat": "Regional context only: SIM 3464 units may be offset 100-200 m from this base map."
+      }
+    }
+  ],
+  "default_stop": "bunsen-peak"
+}

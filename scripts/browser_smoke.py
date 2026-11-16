@@ -118,6 +118,18 @@ def main() -> int:
             kb.wait_for_selector(".route-card", timeout=10000)
         res["keyboard_only_reaches_routes"] = reached
 
+        # second planning area, opened via a shareable ?area= link
+        rim = browser.new_page(viewport={"width": 1440, "height": 900})
+        watch(rim, errors, failed)
+        rim.goto(a.url.rstrip("/") + "/?area=jezero-crater-rim-v1")
+        rim.wait_for_selector(".guide[open]")
+        rim.get_by_role("button", name="Start planning").click()
+        rim.wait_for_selector(".rail-n.done", timeout=120000)
+        rim.wait_for_timeout(2500)
+        res["rim_area_active"] = rim.locator(".area-switch button.on").inner_text()
+        res["rim_feasibility"] = rim.locator(".rail-s").nth(2).inner_text()
+        rim.screenshot(path=str(out / "12_crater_rim.png"))
+
         m = browser.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
         watch(m, errors, failed)
         m.goto(a.url)
@@ -136,6 +148,7 @@ def main() -> int:
         and "Infeasible" in str(res.get("contingency_enclosed"))
         and "NO_ROUTE" in str(res.get("enclosed_reasons"))
         and res["keyboard_only_reaches_routes"] is True
+        and res.get("rim_area_active") == "Crater rim" and "margin" in str(res.get("rim_feasibility"))
         and res["mobile_horizontal_overflow_px"] == 0
         and not errors
         and not failed

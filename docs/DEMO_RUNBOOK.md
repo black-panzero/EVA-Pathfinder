@@ -42,6 +42,13 @@ The left rail lists five steps, and each step has **Back / Next** buttons at the
    - **Labels**: the run manifest.
 9. **Report.** Click **Report** in the top bar to download the JSON evidence bundle.
 
+## Second planning area (crater rim)
+
+1. In the top bar, click **Crater rim**, or click the faint "Crater rim" outline on the map. The default plan (forward habitat → Bunsen Peak) computes as **Feasible** with about 189 min to spare.
+2. Tick **Cheyava Falls** (the "leopard spots" rock) and click **Compute routes**. It is **Infeasible**: the site's own 20 m cell is steeper than the 15° limit (`SLOPE_EXCEEDS_LIMIT`).
+3. Set **Steepest allowed slope** to 20 and recompute. It becomes **Feasible**. This shows the slope limit is a hard constraint.
+4. Tick **Singita** instead. It is reachable on terrain but the walk exceeds the time budget, so the result is `INSUFFICIENT_TIME`.
+
 ## 30-second video cut (if recorded)
 
 See the timed script in `docs/NASA_SUBMISSION_DRAFT.md` ("30-second video script"). It opens with the team and challenge and ends with limits and future work, as the 2026 guide asks.

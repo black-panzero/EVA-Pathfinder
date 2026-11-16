@@ -8,7 +8,7 @@ Run date: 2026-11-15/16 (latest run 2026-11-15T21:41Z UTC). Machine: Intel Core 
 |---|---|---|
 | Data pipeline | `python scripts/prepare_data.py --offline` | All source checksums verified; 7/7 sources AVAILABLE_VERIFIED; DEM 405 × 225, 100% valid |
 | Static export | `python scripts/build_static_site.py` | 1.51 MB exported |
-| Backend tests | `make test-backend` | **100 passed**, 0 failed, 0 xfail (9.7 s) |
+| Backend tests | `make test-backend` | **106 passed**, 0 failed (includes `test_multi_area.py` for the crater-rim area) |
 | Frontend tests | `make test-frontend` | **5 passed** |
 | Lint / types | `make lint` | ruff: all checks passed; mypy: no issues in 20 files; `tsc -b`: no errors |
 | Static production build | `VITE_BASE=/ npm run build:static` | Built; 16 Python engine files copied; `dist/CNAME` = `midgardians.darelladero.tech` |
@@ -50,6 +50,11 @@ Default mission: habitat (landing localization) → Wildcat Ridge (60 min activi
 | Max slope 8° | INFEASIBLE: the Wildcat Ridge cell itself exceeds the limit |
 | Contingency at 163 min, 250 m zone | FEASIBLE → FEASIBLE; detour avoids every blocked cell |
 | Zone (200 m) on the habitat | FEASIBLE → INFEASIBLE `GOAL_IMPASSABLE, BLOCKED_BY_SCENARIO_EVENT, NO_ROUTE` |
+| Crater rim: forward habitat → Bunsen Peak | FEASIBLE: 3,065 m, 126.5 min |
+| Crater rim: → Turquoise Bay | FEASIBLE: 806 m, 66.6 min |
+| Crater rim: → Cheyava Falls at 15° / 20° | INFEASIBLE (`GOAL_IMPASSABLE`, `SLOPE_EXCEEDS_LIMIT`) / FEASIBLE (5,843 m, 202.7 min) |
+| Crater rim: → Shallow Bay at 20° | INFEASIBLE `INSUFFICIENT_TIME` (10.8 km, 380 min > 315 usable) |
+| Crater rim: → Singita | INFEASIBLE `INSUFFICIENT_TIME`, `INSUFFICIENT_CONSUMABLE` (16-20 km) |
 
 **Timing:**
 - Server: one A* leg 55-75 ms; a full evaluate has a median of 0.21 s.

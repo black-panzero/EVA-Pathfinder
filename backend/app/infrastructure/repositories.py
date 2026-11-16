@@ -30,9 +30,10 @@ class DataUnavailable(RuntimeError):
 
 
 class StudyAreaRepository:
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, area_id: str | None = None):
         self.settings = settings
-        self.dir = settings.processed_dir
+        self.area_id = area_id or settings.study_area_id
+        self.dir = settings.processed_dir_for(self.area_id)
         if not (self.dir / "manifest.json").exists():
             raise DataUnavailable(f"Prepared study area not found at {self.dir}. Run `make data` (scripts/prepare_data.py).")
 

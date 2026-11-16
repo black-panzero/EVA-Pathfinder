@@ -40,14 +40,16 @@ class StaticRepo:
         self.science = json.loads(sc.read_text()) if sc.exists() else None
 
 
-_state: dict = {}
+_areas: dict[str, dict] = {}  # one prepared planning area per id (Pyodide is single-threaded)
+_state: dict = {}  # the area serving the current call
 
 
-def init(data_dir: str, code_version: str, max_stops: int = 3, max_block_radius_m: float = 1000.0) -> str:
+def init(data_dir: str, code_version: str, max_stops: int = 3, max_block_radius_m: float = 1000.0, area_id: str = "default") -> str:
     repo = StaticRepo(data_dir)
-    _state["repo"] = repo
-    _state["svc"] = MissionService(repo, code_version + "+pyodide", max_stops, max_block_radius_m)
-    return json.dumps({"ok": True, "grid": [repo.grid.width, repo.grid.height]})
+    _areas[area_id] = {"repo": repo, "svc": MissionService(repo, code_version + "+pyodide", max_stops, max_block_radius_m)}
+    _state.clear()  # calls without an explicit area use the most recently initialised one
+    _state.update(_areas[area_id])
+    return json.dumps({"ok": True, "area_id": area_id, "grid": [repo.grid.width, repo.grid.height]})
 
 
 def _defaults() -> dict | None:
@@ -66,7 +68,12 @@ _ROUTES: dict[str, tuple[TypeAdapter[Any], Any]] = {
 }
 
 
-def call(endpoint: str, body_json: str) -> str:
+def call(endpoint: str, body_json: str, area_id: str | None = None) -> str:
+    if area_id is not None:
+        if area_id not in _areas:
+            return json.dumps({"ok": False, "status": 404, **handlers.error_body("AREA_NOT_FOUND", f"planning area '{area_id}' not loaded")})
+        _state.clear()
+        _state.update(_areas[area_id])
     if "svc" not in _state:
         return json.dumps({"ok": False, "status": 503, **handlers.error_body("DATA_UNAVAILABLE", "engine not initialised")})
     if endpoint not in _ROUTES:

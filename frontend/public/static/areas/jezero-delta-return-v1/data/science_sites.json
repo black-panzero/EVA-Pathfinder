@@ -1176,5 +1176,6 @@
       "sample_sol": 2018,
       "position_source": "NASA rover localization on or before the coring sol"
     }
-  ]
+  ],
+  "default_stop": "wildcat-ridge"
 }

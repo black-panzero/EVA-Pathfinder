@@ -1,0 +1,62 @@
+{
+  "units": [
+    {
+      "code": 1,
+      "symbol": "NHjf2",
+      "name": "Jezero fan 2 unit",
+      "note": "Jezero fan unit 2: topographically higher, younger member of the Jezero fan (delta) deposits.",
+      "color": "#d67d48",
+      "cells": 8408
+    },
+    {
+      "code": 2,
+      "symbol": "Nnp1",
+      "name": "Nili Planum 1 unit",
+      "note": "Nili Planum unit 1 (outside Jezero).",
+      "color": "#6ea0c8",
+      "cells": 10678
+    },
+    {
+      "code": 3,
+      "symbol": "Nrb",
+      "name": "Rugged bright unit",
+      "note": "Rugged bright unit.",
+      "color": "#c4aa60",
+      "cells": 2631
+    },
+    {
+      "code": 4,
+      "symbol": "Nue",
+      "name": "Upper etched unit",
+      "note": "Upper etched unit: widely occurring olivine-rich unit with several surface textures.",
+      "color": "#966eaa",
+      "cells": 29404
+    },
+    {
+      "code": 5,
+      "symbol": "su",
+      "name": "Smooth unit, undivided",
+      "note": "Smooth unit, undivided.",
+      "color": "#78b478",
+      "cells": 5296
+    },
+    {
+      "code": 6,
+      "symbol": "Aeb",
+      "name": "Eolian bedform unit",
+      "note": "Eolian bedform unit: young windblown bedforms (for example transverse aeolian ridges).",
+      "color": "#dcc88c",
+      "cells": 20809
+    },
+    {
+      "code": 7,
+      "symbol": "cr",
+      "name": "Crater rim unit",
+      "note": "Crater rim unit.",
+      "color": "#b45a5a",
+      "cells": 29586
+    }
+  ],
+  "coverage_fraction": 1.0,
+  "source_crs": "MTM_clon77.5E"
+}

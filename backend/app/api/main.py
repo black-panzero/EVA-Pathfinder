@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
+from contextvars import ContextVar
 from functools import lru_cache
 
 from fastapi import FastAPI, HTTPException, Request
@@ -34,9 +35,29 @@ app = FastAPI(title="EVA Pathfinder / EVA Guardian API", version="1.0.0",
 app.add_middleware(CORSMiddleware, allow_origins=list(settings.cors_origins), allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 
 
-@lru_cache(maxsize=1)
+# Active planning area for the current request (?area=<study_area_id>; default: the primary area).
+_current_area: ContextVar[str] = ContextVar("current_area", default=settings.study_area_id)
+
+
+@app.middleware("http")
+async def _select_area(request: Request, call_next):  # type: ignore[no-untyped-def]
+    area_id = request.query_params.get("area") or settings.study_area_id
+    if settings.area(area_id) is None:
+        return JSONResponse(status_code=404, content=handlers.error_body("AREA_NOT_FOUND", f"unknown planning area '{area_id}'"))
+    token = _current_area.set(area_id)
+    try:
+        return await call_next(request)
+    finally:
+        _current_area.reset(token)
+
+
+@lru_cache(maxsize=8)
+def _repo_for(area_id: str) -> StudyAreaRepository:
+    return StudyAreaRepository(settings, area_id)
+
+
 def repo() -> StudyAreaRepository:
-    return StudyAreaRepository(settings)
+    return _repo_for(_current_area.get())
 
 
 def service() -> MissionService:
@@ -191,6 +212,23 @@ def photo(photo_id: str) -> FileResponse:
     if not p:
         raise HTTPException(404, "photo not found")
     return FileResponse(p, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@app.get(f"/api/{API_VERSION}/areas")
+def areas() -> dict:
+    """All planning areas (static config; routing runs inside one area at a time)."""
+    out = []
+    for a in settings.areas:
+        aid = a["study_area_id"]
+        try:
+            r = _repo_for(aid)
+            g = r.manifest["grid"]
+            out.append({"study_area_id": aid, "name": a["name"], "short_name": a.get("short_name", a["name"]), "default": aid == settings.study_area_id,
+                        "lon_range_deg": g["lon_range_deg"], "lat_range_deg": g["lat_range_deg"], "data_ready": True,
+                        "plannable_sites": sum(1 for s in r.science["sites"] if s.get("in_planning_area", True))})
+        except DataUnavailable:
+            out.append({"study_area_id": aid, "name": a["name"], "short_name": a.get("short_name", a["name"]), "default": aid == settings.study_area_id, "data_ready": False})
+    return {"areas": out}
 
 
 @app.get(f"/api/{API_VERSION}/missions/default")

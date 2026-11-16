@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, Check, Download, GitCompareArrows, HelpCircle, ShieldCheck, SlidersHorizontal, TriangleAlert } from "lucide-react";
-import { api, ApiRequestError, STATIC_MODE } from "./api/client";
+import { api, ApiRequestError, STATIC_MODE, type AreaInfo } from "./api/client";
 import type { DatasetsResponse, EvaluateResponse, MissionRequest, Observations, ReplanRequest, ReplanResponse, ScienceSite, StudyArea, XY } from "./api/types";
 import { Guide } from "./components/Guide";
 import { StatusBadge } from "./components/ui";
@@ -59,6 +59,10 @@ export default function App() {
   const [siteSel, setSiteSel] = useState<{ id: string; n: number } | null>(null);
   const [guide, setGuide] = useState(!seenGuide());
   const [focus, setFocus] = useState<{ x: number; y: number; n: number } | null>(null);
+  const [areas, setAreas] = useState<AreaInfo[]>([]);
+  const [area, setArea] = useState<string | null>(null);
+  const areaRef = useRef<string | null>(null);
+  areaRef.current = area;
 
   // inputs that change routes (route_choice only selects between the two computed plans)
   const inputKey = req ? JSON.stringify({ ...req, route_choice: undefined }) : "";
@@ -67,7 +71,9 @@ export default function App() {
   const evaluate = useCallback(async (r: MissionRequest) => {
     setBusy(true); setError(null); setReplan(null); setReplanReq(null);
     try {
-      const [shortest, terrain] = await Promise.all([api.evaluate({ ...r, route_choice: "shortest" }), api.evaluate({ ...r, route_choice: "terrain" })]);
+      const a0 = areaRef.current!;
+      const [shortest, terrain] = await Promise.all([api.evaluate(a0, { ...r, route_choice: "shortest" }), api.evaluate(a0, { ...r, route_choice: "terrain" })]);
+      if (areaRef.current !== a0) return false; // user switched area meanwhile
       setPlans({ shortest, terrain });
       setPlanKey(JSON.stringify({ ...r, route_choice: undefined }));
       const a = (r.route_choice === "shortest" ? shortest : terrain).assessment;
@@ -84,17 +90,35 @@ export default function App() {
     }
   }, []);
 
+  // Planning areas: the URL ?area= picks one (shareable); default is the primary area.
   useEffect(() => {
+    api.areas().then(({ areas: list }) => {
+      const ready = list.filter((x) => x.data_ready);
+      setAreas(ready);
+      const wanted = new URLSearchParams(window.location.search).get("area");
+      setArea((ready.find((x) => x.study_area_id === wanted) ?? ready.find((x) => x.default) ?? ready[0])?.study_area_id ?? null);
+    }).catch((e) => setError(errText(e)));
+  }, []);
+
+  useEffect(() => {
+    if (!area) return;
+    const url = new URL(window.location.href);
+    if (areas.find((x) => x.study_area_id === area)?.default) url.searchParams.delete("area"); else url.searchParams.set("area", area);
+    window.history.replaceState(null, "", url);
+    setSa(null); setReq(null); setPlans({ shortest: null, terrain: null }); setPlanKey(""); setReplan(null); setReplanReq(null);
+    setStep(1); setPick("none"); setPhoto(null); setSiteSel(null); setCont((c) => ({ ...c, center: null }));
     (async () => {
       try {
-        const [s, o, d, def, sci] = await Promise.all([api.studyArea(), api.observations(), api.datasets(), api.defaultMission(), api.scienceSites()]);
+        const [s, o, d, def, sci] = await Promise.all([api.studyArea(area), api.observations(area), api.datasets(area), api.defaultMission(area), api.scienceSites(area)]);
+        if (areaRef.current !== area) return;
         setSa(s); setObs(o); setDs(d); setReq(def.request); setSites(sci.sites);
         evaluate(def.request);
       } catch (e) {
         setError(errText(e));
       }
     })();
-  }, [evaluate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [area]);
 
   const chosen = req?.route_choice ?? "terrain";
   const chosenPlan = plans[chosen];
@@ -115,12 +139,12 @@ export default function App() {
       event: { type: "BLOCKED_ZONE", radius_m: cont.radius_m, center: cont.center, position_fraction: cont.position_fraction },
     };
     setReplanBusy(true); setReplanErr(null);
-    try { setReplan(await api.replan(body)); setReplanReq(body); } catch (e) { setReplanErr(errText(e)); setReplan(null); } finally { setReplanBusy(false); }
+    try { setReplan(await api.replan(area!, body)); setReplanReq(body); } catch (e) { setReplanErr(errText(e)); setReplan(null); } finally { setReplanBusy(false); }
   };
   const downloadReport = async () => {
     if (!req) return;
     try {
-      const rep = await api.report(req, replanReq);
+      const rep = await api.report(area!, req, replanReq);
       const url = URL.createObjectURL(new Blob([JSON.stringify(rep, null, 2)], { type: "application/json" }));
       const el = document.createElement("a");
       el.href = url; el.download = "eva-pathfinder-report.json"; el.click();
@@ -171,7 +195,15 @@ export default function App() {
       <a href="#step-actions" className="skip-link" onClick={(e) => { e.preventDefault(); document.getElementById("step-next")?.focus(); }}>Skip to step actions</a>
       <header className="topbar">
         <div className="brand"><Mark /><span>EVA Pathfinder</span></div>
-        <div className="crumb"><span>Jezero Crater, Mars</span><span className="m">Operation Delta Return · simulated mission</span></div>
+        <div className="crumb">
+          <span>Jezero Crater, Mars</span>
+          {areas.length > 1 && (
+            <div className="segmented area-switch" role="radiogroup" aria-label="Planning area">
+              {areas.map((x) => <button key={x.study_area_id} type="button" role="radio" aria-checked={area === x.study_area_id} className={area === x.study_area_id ? "on" : ""} onClick={() => setArea(x.study_area_id)}>{x.short_name}</button>)}
+            </div>
+          )}
+          <span className="m">Simulated mission</span>
+        </div>
         <div className="top-actions">
           {a && !stale && <StatusBadge status={a.status} />}
           <button type="button" className="btn sm ghost" onClick={() => setGuide(true)}><HelpCircle size={14} strokeWidth={1.75} aria-hidden="true" />How it works</button>
@@ -202,7 +234,7 @@ export default function App() {
       </nav>
 
       <main className="stage">
-        <MarsMap sa={sa} view={view} setView={setView} showTraverse={showTraverse} setShowTraverse={setShowTraverse} showPhotos={showPhotos} setShowPhotos={setShowPhotos}
+        <MarsMap key={sa.study_area_id} sa={sa} areaOutlines={areas.filter((x) => x.study_area_id !== area)} onSelectArea={setArea} view={view} setView={setView} showTraverse={showTraverse} setShowTraverse={setShowTraverse} showPhotos={showPhotos} setShowPhotos={setShowPhotos}
           routes={mapRoutes} habitat={req.habitat} stops={req.stops.map((s) => ({ id: s.stop_id, name: s.name, point: s.point }))} sites={sites} photos={obs?.photos ?? []}
           zone={step === 4 ? (replan ? { center: replan.event.center_xy_m, radius_m: replan.event.radius_m } : cont.center ? { center: [cont.center.x_m, cont.center.y_m], radius_m: cont.radius_m } : null) : null}
           crew={step === 4 && replan ? { x_m: replan.current_position.x_m, y_m: replan.current_position.y_m } : null}
@@ -214,7 +246,7 @@ export default function App() {
         <div className="panel-scroll">
           {error && <p className="callout neg" role="alert">{error}</p>}
           {busy && <p className="callout" role="status">{STATIC_MODE && !chosenPlan ? "Starting the planning engine in your browser, this takes 10-30 s the first time…" : "Computing routes on the elevation map…"}</p>}
-          {step === 1 && <PlanStep req={req} setReq={setReq} sites={sites} picking={pick === "habitat"} onPickHabitat={() => setPick(pick === "habitat" ? "none" : "habitat")}
+          {step === 1 && <PlanStep habitatNote={sa.habitat.note} req={req} setReq={setReq} sites={sites} otherAreas={areas.filter((x) => x.study_area_id !== area)} onSelectArea={setArea} picking={pick === "habitat"} onPickHabitat={() => setPick(pick === "habitat" ? "none" : "habitat")}
             onFocus={(x, y) => setFocus({ x, y, n: Date.now() })} />}
           {step === 2 && <RoutesStep plans={plans} chosen={chosen} onChoose={(c) => setReq({ ...req, route_choice: c })} />}
           {step === 3 && <FeasibilityStep a={a} names={Object.fromEntries(sites.map((s) => [s.id, s.name]))} />}

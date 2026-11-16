@@ -64,3 +64,13 @@ The user expected an "entire map" rather than one crop with three points. They c
 - **Routing area unchanged:** routing stays on the 8.1 × 4.5 km grid so planning stays fast in the browser. Sites outside it are context only and labelled as such.
 - **Sample sites:** 21 sites compiled from the Mars 2020 Initial Reports (coring sols and report coordinates) by a research agent; every URL was checked.
 - **Keyboard access:** a "Skip to step actions" link was added as the first focusable element. With 14 plannable sites the panel has many controls before its actions.
+
+## Second planning area: crater rim (2026-11-16)
+
+To make the nine crater-rim sample sites plannable, a second planning area was added instead of enlarging the first.
+- **Why not one big area:** a single 24 × 5.5 km area (about 330k cells) would make in-browser planning much slower. Two areas of about 100k cells keep each evaluation under a second.
+- **Pipeline:** `prepare_data.py --area-config config/study_area.crater-rim.json` builds the rim area. The per-product `data/source_manifest.json` is written only for the primary area.
+- **API:** an `?area=` query parameter is read once in middleware. Requests without it behave exactly as before (primary area), and an unknown area returns 404 `AREA_NOT_FOUND` (contract `SOURCE_UNAVAILABLE`).
+- **Static build:** each area is exported to `static/areas/<id>/`, and the browser worker loads an area's data the first time it is used.
+- **UI:** a top-bar area switch, clickable outlines of the other area, a per-area habitat note and the URL `?area=`. Plans reset on switch because a route cannot span both areas.
+- **Defaults:** each area has a default stop (`default_stop`): Wildcat Ridge and Bunsen Peak.

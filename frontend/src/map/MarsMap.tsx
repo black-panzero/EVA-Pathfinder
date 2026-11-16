@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Camera, Footprints, X } from "lucide-react";
+import type { AreaInfo } from "../api/client";
 import type { GeologyUnit, Photo, ScienceSite, StudyArea, XY } from "../api/types";
 
 export type MapView = "ortho" | "elevation" | "slope" | "geology";
@@ -10,6 +11,9 @@ export interface MapRoute { id: string; points: [number, number][]; color: strin
 
 export interface MarsMapProps {
   sa: StudyArea;
+  /** Other planning areas, drawn as clickable outlines. */
+  areaOutlines: AreaInfo[];
+  onSelectArea: (id: string) => void;
   view: MapView;
   setView: (v: MapView) => void;
   showTraverse: boolean;
@@ -140,6 +144,19 @@ export function MarsMap(props: MarsMapProps) {
     for (const layer of sa.layers) overlays.current[layer.layer_id] = L.imageOverlay(layer.image_url, planBounds, { alt: layer.title, className: `ov-${layer.layer_id}` });
     overlays.current.ortho?.addTo(m);
     L.rectangle(planBounds, { color: "#ededed", weight: 1, dashArray: "4 4", fill: false, interactive: false }).addTo(m);
+    for (const o of props.areaOutlines) {
+      if (!o.lon_range_deg || !o.lat_range_deg) continue;
+      const ob = L.latLngBounds([o.lat_range_deg[0], o.lon_range_deg[0]], [o.lat_range_deg[1], o.lon_range_deg[1]]);
+      L.rectangle(ob, { color: "#a1a1a6", weight: 1, dashArray: "2 6", fill: true, fillOpacity: 0.04 })
+        .bindTooltip(`${o.short_name} planning area · click to plan here`, { sticky: true })
+        .on("click", () => { if (propsRef.current.pickMode === "none") propsRef.current.onSelectArea(o.study_area_id); }).addTo(m);
+      // label at the other area's corner farthest from this area, so it never covers the active route
+      const c = planBounds.getCenter();
+      const corners = [ob.getNorthWest(), ob.getNorthEast(), ob.getSouthWest(), ob.getSouthEast()];
+      const far = corners.reduce((a, b) => (Math.hypot(b.lat - c.lat, b.lng - c.lng) > Math.hypot(a.lat - c.lat, a.lng - c.lng) ? b : a));
+      const east = far.lng > ob.getCenter().lng, north = far.lat > ob.getCenter().lat;
+      L.marker(far, { icon: L.divIcon({ className: "area-label", html: `<span>${o.short_name}</span>`, iconSize: [140, 20], iconAnchor: [east ? 144 : -4, north ? -4 : 22] }), interactive: false, keyboard: false }).addTo(m);
+    }
     m.fitBounds(L.latLngBounds([-75, -180], [75, 180]), { animate: false });
     const label = L.marker(planBounds.getCenter(), { icon: L.divIcon({ className: "place-label", html: "<span>Jezero Crater</span>", iconSize: [120, 20], iconAnchor: [-14, 10] }), interactive: false, keyboard: false });
     traverse.current = L.layerGroup();

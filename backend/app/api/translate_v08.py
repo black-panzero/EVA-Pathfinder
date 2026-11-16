@@ -216,6 +216,12 @@ def merge_contract_meta(out: dict, assumptions: list[dict], mission_id: str | No
 
 
 # --------------------------------------------------------------------------- replan
+def _default_stop(science: dict) -> dict:
+    """The area's configured default stop, else its first site inside the planning area."""
+    plannable = [s for s in science["sites"] if s.get("in_planning_area", True)]
+    return next((s for s in plannable if s["id"] == science.get("default_stop")), plannable[0] if plannable else science["sites"][0])
+
+
 def default_mission_request(defaults: dict, science: dict | None) -> dict | None:
     """Legacy MissionRequest payload of the config default mission (also served by GET /missions/default)."""
     if not science or not science.get("sites"):
@@ -223,7 +229,7 @@ def default_mission_request(defaults: dict, science: dict | None) -> dict | None
     tp, b = defaults["traversal_profile"], defaults["budgets"]
     return {
         "habitat": {"x_m": science["habitat"]["x_m"], "y_m": science["habitat"]["y_m"]},
-        "stops": [{"stop_id": s["id"], "name": s["name"], "point": {"x_m": s["x_m"], "y_m": s["y_m"]}, "activity_min": s["default_activity_min"]} for s in science["sites"][:1]],
+        "stops": [{"stop_id": s["id"], "name": s["name"], "point": {"x_m": s["x_m"], "y_m": s["y_m"]}, "activity_min": s["default_activity_min"]} for s in [_default_stop(science)]],
         "route_choice": "terrain",
         "profile": {"flat_speed_m_per_min": tp["flat_speed_m_per_min"], "ascent_rate_m_per_min": tp["ascent_rate_m_per_min"], "max_slope_deg": tp["max_slope_deg"]},
         "budget": {k: b[k] for k in ("time_available_min", "consumable_initial_units", "consumable_rate_traverse_per_min", "consumable_rate_activity_per_min", "reserve_fraction")},

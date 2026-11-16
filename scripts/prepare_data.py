@@ -420,7 +420,7 @@ def fetch_photos(grid: TerrainGrid, waypoints: list[dict], requests: list[dict],
                 except Exception as exc:
                     log(f"image download failed {img['imageid']}: {exc}")
                     continue
-            p = place(grid, rec)
+            p = place_any(grid, rec)
             anchor = sites[req["site_id"]]
             lat_mid = math.radians((p["lat_deg"] + anchor["lat_deg"]) / 2.0)
             dx_ground = (p["x_m"] - anchor["x_m"]) * math.cos(lat_mid)
@@ -717,11 +717,13 @@ def write_source_manifest(sources: list[dict], status: dict, source_raster: dict
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true", help="never download; use cached raw files only")
+    ap.add_argument("--area-config", default="config/study_area.json", help="planning-area config (default: the delta-return area)")
     args = ap.parse_args()
 
     sources = json.loads((ROOT / "config/sources.json").read_text())["sources"]
     by_id = {s["source_id"]: s for s in sources}
-    area = json.loads((ROOT / "config/study_area.json").read_text())
+    area = json.loads((ROOT / args.area_config).read_text())
+    primary_area = args.area_config == "config/study_area.json"
     science = json.loads((ROOT / "config/science_sites.json").read_text())
     win = area["dem_window"]
     if win["width"] * win["height"] > area["max_cells"]:
@@ -767,7 +769,8 @@ def main() -> None:
 
     log("resolving waypoints")
     waypoints = load_waypoints(ROOT / by_id["nasa-m2020-waypoints"]["local_path"])
-    habitat = {**{k: v for k, v in science["habitat"].items() if k != "rover_record"}, **place(grid, resolve_record(waypoints, **science["habitat"]["rover_record"]))}
+    hab_cfg = {**science["habitat"], **area.get("habitat", {})}  # an area may override the simulated habitat
+    habitat = {**{k: v for k, v in hab_cfg.items() if k != "rover_record"}, **place(grid, resolve_record(waypoints, **hab_cfg["rover_record"]))}
     sites = []
     geo_raster = np.load(out / "geology_units.npy") if geo_info else None
     geo_lookup = {u["code"]: u for u in geo_info["units"]} if geo_info else {}
@@ -803,7 +806,7 @@ def main() -> None:
     log("summarising MEDA record")
     meda = summarise_meda(ROOT / "data/raw/m2020_meda", 684)
 
-    (out / "science_sites.json").write_text(json.dumps({"habitat": habitat, "sites": sites}, indent=2))
+    (out / "science_sites.json").write_text(json.dumps({"habitat": habitat, "sites": sites, "default_stop": area.get("default_stop")}, indent=2))
     (out / "rover_traverse.json").write_text(json.dumps({"source_id": "nasa-m2020-waypoints", "points": traverse}, indent=1))
     (out / "photos.json").write_text(json.dumps(photos, indent=2))
     (out / "meda.json").write_text(json.dumps(meda, indent=2) if meda else "null")
@@ -901,7 +904,8 @@ def main() -> None:
         ],
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2))
-    write_source_manifest(sources, status, source_raster, manifest, waypoints, photos, meda, geo_info, geo_src_wkt, valid, elev_check)
+    if primary_area:  # the per-product source manifest describes the primary planning area
+        write_source_manifest(sources, status, source_raster, manifest, waypoints, photos, meda, geo_info, geo_src_wkt, valid, elev_check)
     log(f"done -> {out.relative_to(ROOT)}")
     log(f"DEM {grid.width}x{grid.height} valid={valid.mean():.4f} elev {zmin:.1f}..{zmax:.1f} m; rover elevation check {elev_check}")
     log(f"registration {reg['best_shift_cells']} r={reg['best_correlation']} (zero-shift r={reg['zero_shift_correlation']}); photos={len(photos)}; geology units={len(geo_info['units']) if geo_info else 0}")

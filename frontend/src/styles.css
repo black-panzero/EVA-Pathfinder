@@ -358,3 +358,22 @@ svg .band { fill: rgba(255, 122, 69, 0.12); }
 .skip-link { position: fixed; left: -9999px; top: 8px; z-index: 1000; background: var(--text); color: var(--bg); padding: 6px 12px; border-radius: 6px; font-weight: 500; text-decoration: none; }
 .skip-link:focus { left: 50%; transform: translateX(-50%); }
 .panel { position: relative; }
+
+.area-switch { padding: 2px; }
+.area-switch button { height: 28px; padding: 0 10px; flex: none; white-space: nowrap; }
+.area-label span { display: inline-block; white-space: nowrap; font: 500 11px var(--sans); color: var(--text-2); background: rgba(20, 20, 21, 0.8); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 900px) { .crumb { display: flex !important; } .crumb > span { display: none; } .area-switch button { padding: 0 8px; font-size: 12px; } }
+/* phones: area switch gets its own row under the brand bar */
+@media (max-width: 900px) {
+  .shell { grid-template-rows: auto auto 52vh auto; }
+  .topbar { flex-wrap: wrap; height: auto; min-height: 56px; padding: 8px 12px; position: static; }
+  .crumb { order: 3; flex-basis: 100%; overflow-x: auto; }
+  .area-switch { width: 100%; }
+  .area-switch button { flex: 1; }
+  .rail { top: 0; }
+}
+@media (max-width: 900px) {
+  .map-wrap .leaflet-control-attribution { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100vw - 24px); }
+  .map-foot { bottom: 24px; }
+}

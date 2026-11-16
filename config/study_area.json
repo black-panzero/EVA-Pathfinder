@@ -5,7 +5,14 @@
   "dem_source_id": "usgs-m2020-trn-ctx-dtm-20m",
   "optical_source_id": "usgs-m2020-trn-ctx-ortho-6m",
   "_window_comment": "Window in DEM pixel units. col_off and row_off are multiples of 3 so the window edges fall exactly on 6 m orthomosaic pixel edges (20*3 = 6*10). Chosen to contain the Octavia E. Butler landing localization, the Three Forks depot and the Wildcat Ridge delta-front site, as verified against rover waypoint records.",
-  "dem_window": {"col_off": 516, "row_off": 690, "width": 405, "height": 225},
+  "dem_window": {
+    "col_off": 516,
+    "row_off": 690,
+    "width": 405,
+    "height": 225
+  },
   "max_cells": 250000,
-  "alignment_tolerance_m": 1.0
+  "alignment_tolerance_m": 1.0,
+  "short_name": "Delta & crater floor",
+  "default_stop": "wildcat-ridge"
 }

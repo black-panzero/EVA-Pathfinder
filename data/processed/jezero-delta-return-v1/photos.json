@@ -31,6 +31,7 @@
       "drive": 1062,
       "rover_elev_geoid_m": -2545.266,
       "dem_elev_m": -2546.95,
+      "in_planning_area": true,
       "site_anchor_record": {
         "site": 32,
         "drive": 250
@@ -72,6 +73,7 @@
       "drive": 1222,
       "rover_elev_geoid_m": -2523.167969,
       "dem_elev_m": -2519.85,
+      "in_planning_area": true,
       "site_anchor_record": {
         "site": 26,
         "drive": 1222
